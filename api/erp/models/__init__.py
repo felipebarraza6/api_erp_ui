@@ -5,5 +5,5 @@ from .users import User
 from .forms_landing import FormLandingContact 
 from .webinars import Webinars, ElementsProgramation  
 from .supports import SupportSection, TicketSupport, AnswerTicket
-from .projects import Project, TypeElement, ValueElement
+from .projects import Project, TypeElement, ValueElement, CompanyDeparment, NoteProject, AnswerNote
 from .liftings import Well, Lifting, PhotoWell, ResolutionInfo

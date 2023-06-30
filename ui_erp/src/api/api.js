@@ -30,6 +30,13 @@ export const GET = async (endpoint) =>{
     return response
 }
 
+export const GET_NOTTOKEN = async (endpoint) =>{
+    
+    const response = await INSTANCE.get(endpoint)
+
+    return response
+}
+
 export const POST = async (endpoint, data) =>{
 
     const token = JSON.parse(localStorage.getItem('access_token') || null)

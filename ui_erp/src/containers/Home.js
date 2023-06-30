@@ -6,16 +6,16 @@ import { Layout, Menu, Typography  } from 'antd'
 
 // Antd Icons
 import { DashboardOutlined,          
-         UsergroupAddOutlined, 
+          ApartmentOutlined, 
           FolderOutlined,
-         BuildOutlined, 
-         ToolOutlined,
-         OrderedListOutlined,
-         UserOutlined,
-         UnorderedListOutlined,
-         ProfileFilled,
-         FolderOpenOutlined, 
-         BuildFilled,
+          BuildOutlined, 
+          ToolOutlined,
+          OrderedListOutlined,
+          UserOutlined,
+          UnorderedListOutlined,
+          ProfileFilled,
+          FolderOpenOutlined, 
+          BuildFilled,
          FileOutlined } from '@ant-design/icons'
 
 //Build
@@ -33,6 +33,7 @@ import ConfigElements from '../components/config_elements/ConfigElements'
 import ViewProject from '../components/projects/ViewProject'
 import ExternalLiftings from '../components/liftings/erp/ExternalLiftings'
 import InternalLifftings from '../components/liftings/erp/InternalLiftings'
+import Departaments from '../components/departaments/Departaments'
 
 
 // React Router
@@ -108,6 +109,12 @@ const Home = () =>{
                           Configurar entradas
                         </Link>                        
                       </Menu.Item>
+                      <Menu.Item key="10">
+                        <Link to="/config_deparments">
+                          <ApartmentOutlined />
+                          Configurar departamentos
+                        </Link>                        
+                      </Menu.Item>
                     </Menu.SubMenu>
                   <Menu.Item key="7">
                     <Link to="/actions">
@@ -136,6 +143,7 @@ const Home = () =>{
                     <Route exact path='/projects' component={Projects} />
                     <Route exact path='/config_entry' component={ConfigElements} />
                     <Route exact path='/projects/:id' component={ViewProject} />
+                    <Route exact path='/config_deparments' component={Departaments} />
                     <Route path="*" component={NotFound} />
                  </Switch>
                 </div>

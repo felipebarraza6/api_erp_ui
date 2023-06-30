@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../../api/endpoints'
-import { Table, Button, Modal, 
+import { Table, Button, Modal, Select,
           Tooltip, Card, Descriptions,
-          Row, Col, Collapse } from 'antd'
+          Row, Col, Collapse, notification } from 'antd'
 import ResolutionForm from './ResolutionForm'
 import { UserOutlined, CloudDownloadOutlined, EyeFilled, FileImageFilled } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
-
+const { Option } = Select
 const ExternalLiftings = () => {
 
-    const [listQuotations, setListQuotations] = useState([])
+    
     const [list, setList] = useState(null)
+    const [enterprises, setEnterprises] = useState([])
+    const [count, setCount] = useState(0)
     
     async function getData(){
       const rq = await api.liftings.list_external().then((r)=> {       
        setList(r.data.results)
       })
-      return rq
+      const rq2 = await api.enterprises.get_total_enterprises().then((r)=>{
+        setEnterprises(r.enterprises_actives.data.results)
+      })
+      
     }
     
     function modalRetrieveClient(client) {
@@ -129,20 +134,30 @@ const ExternalLiftings = () => {
       })
     }
 
+    const onSelectClient = async(uuid, value) => {            
+      const rq = await api.liftings.update(uuid, { client: value }).then((r)=>{
+        if(value===null){
+          notification.success({message:'Levantamiento sin cliente!'})  
+        } else {
+          notification.success({message:'Cliente asignado correctamente!'})  
+        }        
+        setCount(count+1)
+      })
+    }
+    
 
     useEffect(() => {
       getData()
-    }, [])
+    }, [count])
 
     return(<>
     <a href="/liftings/external" target='__blank'><Button style={{marginBottom:'10px', borderRadius:'5px'}} type='primary' >Nuevo levantamiento externo</Button></a>
     <Table bordered
         columns = {[          
           {
-            title: 'Cliente',
-            render: (x)=> <>
-              {console.log(x)}
-              {x.external_client.name_enterprise && <>
+            title: 'Contacto',
+            render: (x)=> <>              
+              {x.external_client.name_enterprise && <>              
               {x.external_client.name_enterprise.length < 8 ? 
                <Button 
                type='primary'
@@ -189,22 +204,33 @@ const ExternalLiftings = () => {
               </>}
               </>)
             }
-          },                             
+          },   
+          {
+            title: 'Cliente',
+            render:(x)=><><Select style={styles.select} defaultValue={x.client ? x.client.id:null} onSelect={(value=>onSelectClient(x.uuid, value))} placeholder='Asignar a cliente'>              
+              <Option value={null}>Levantamiento sin cliente</Option>
+              {enterprises.map((enterprise)=><Option value={enterprise.id}>{enterprise.name}</Option>)}
+            </Select>            
+            </>
+          }                          
         ]}
         dataSource={list}></Table></>)
 }
 
 const styles = {
-    span:{
-        backgroundColor: '#1890ff',
-        color: 'white',
-        paddingRight:'3px',
-        paddingLeft:'3px',
-        paddingTop:'4px',
-        paddingBottom:'4px',
-        borderRadius:'4px',
-        fontSize:'10px'
-    }
+  select: {
+    minWidth:'250px'
+  },
+  span:{
+    backgroundColor: '#1890ff',
+    color: 'white',
+    paddingRight:'3px',
+    paddingLeft:'3px',
+    paddingTop:'4px',
+    paddingBottom:'4px',
+    borderRadius:'4px',
+    fontSize:'10px'
+  }
 }
 
 

@@ -7,8 +7,8 @@ from django.contrib import admin
 from api.erp.models import (User, Well, Lifting, PhotoWell,
                             ExternalClient, Client, Project, 
                             EconomicActivity, Employee, TypeElement, ValueElement,
-                            FormLandingContact, 
-                            Webinars, ElementsProgramation, 
+                            FormLandingContact, CompanyDeparment,
+                            Webinars, ElementsProgramation, NoteProject, AnswerNote,
                              SupportSection, ResolutionInfo,
                             TicketSupport, AnswerTicket, ChargeWorkload)
 
@@ -33,6 +33,10 @@ admin.site.register(ElementsProgramation)
 admin.site.register(Well)
 admin.site.register(Lifting)
 admin.site.register(PhotoWell)
+admin.site.register(CompanyDeparment)
+
+admin.site.register(NoteProject)
+admin.site.register(AnswerNote)
 
 
 

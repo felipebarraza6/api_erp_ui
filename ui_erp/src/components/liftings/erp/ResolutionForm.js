@@ -145,9 +145,16 @@ const ResolutionForm = ({ well }) => {
                 </Col>
                 <Col span={24}>
                 <Form.Item style={{marginTop:'20px'}}>
+
                     <p >
-                    Plazo instalación sistema de medición: <b><Tag color={dateInstalationMedition>todayDate ? 'green':'red'}>{dateInstalationMedition}</Tag></b> <br/><br/>
-                    Plazo comenzar transmisión: <b><Tag color={dateInstalatioTransmision>todayDate ? 'green':'red'}>{dateInstalatioTransmision}</Tag></b>
+                    Plazo instalación sistema de medición: <b> {dateInstalationMedition && 
+                        <Tag color={dateInstalationMedition>todayDate ? 'green':'red'}>{dateInstalationMedition}</Tag>}
+                        
+                        </b> <br/><br/>
+                    Plazo comenzar transmisión: <b>
+                        {dateInstalationMedition &&  
+                        <Tag color={dateInstalatioTransmision>todayDate ? 'green':'red'}>{dateInstalatioTransmision}</Tag>
+                        }</b>
                     </p>                    
                 </Form.Item>
                 </Col>         

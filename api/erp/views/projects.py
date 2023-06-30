@@ -35,6 +35,19 @@ class ProjectViewSet(mixins.CreateModelMixin,
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
 
+    class ProjectFilter(filters.FilterSet):
+
+        class Meta:
+            model = Project
+            fields = {
+                'client': ['exact'],
+                'code_internal': ['exact'],   
+                'created': ['contains', 'gte', 'lte', 'year', 'month', 'day', 'year__range', 'month__range',
+                    'day__range', 'date__range', 'hour', 'minute', 'second', 'hour__range', 'minute__range', 'minute__range'],      
+            }
+
+    filterset_class = ProjectFilter
+
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return ProjectRetrieveModelSerializer
@@ -61,7 +74,7 @@ class TypeEelementViewSet(mixins.CreateModelMixin,
         class Meta:
             model = TypeElement
             fields = {
-                'origin_element': ['exact'],            
+                'deparment': ['exact'],            
             }
 
     filterset_class = TypeElementFilter

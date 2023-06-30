@@ -1,4 +1,4 @@
-import { GET, POST_LOGIN, POST, UPDATE, DELETE, POST_FILE } from './api'
+import { GET_NOTTOKEN, GET, POST_LOGIN, POST, UPDATE, DELETE, POST_FILE } from './api'
 
 const login = async (data) => {
 
@@ -321,12 +321,12 @@ const delete_velement = async(id) => {
 }
 
 const create_workload = async(data) => {
-    const rq = await POST('workloads/', data)
+    const rq = await POST_LOGIN('workloads/', data)
     return rq
 }
 
 const list_workloads = async() => {
-    const rq = await GET(`workloads/`) 
+    const rq = await GET_NOTTOKEN(`workloads/`) 
     return rq
 }
 
@@ -386,6 +386,11 @@ const retrieve_resolution_info = async(id_well)=> {
 
 const update_resolution_info = async(data, id)=> {
     const rq = await UPDATE(`resolution_info/${id}/`, data)
+    return rq
+}
+
+const update_lifting = async(uuid, data) => {
+    const rq = await UPDATE(`liftings/${uuid}/`, data)
     return rq
 }
 
@@ -461,6 +466,7 @@ const api = {
         list_external: list_liftings_external,
         list_internal: list_liftings_internal,
         create: create_lifting,
+        update: update_lifting,
         wells:{
             create: create_well,
             photo: create_photo,

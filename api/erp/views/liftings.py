@@ -70,7 +70,7 @@ class LiftingsViewSet(mixins.CreateModelMixin,
     ordering = ('created', )
     queryset = Lifting.objects.all()
     serializer_class = LiftingModelSerializer
-    lookup_field = 'id'
+    lookup_field = 'uuid'
 
     class LiftingFilter(filters.FilterSet):
 
@@ -78,7 +78,8 @@ class LiftingsViewSet(mixins.CreateModelMixin,
             model = Lifting
             fields = {
                
-                'is_external': ['exact'],                           
+                'is_external': ['exact'],  
+                'client': ['exact']                         
              
                 }
 

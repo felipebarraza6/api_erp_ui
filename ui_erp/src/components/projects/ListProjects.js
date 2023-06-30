@@ -36,7 +36,8 @@ const ListProjects = ({count, setSelectClient, setCount}) => {
 
     const columns = [        
         {title: 'Cliente', render:(x)=> x.client.name},
-        {title:'Nombre', dataIndex:'name', key:'name'},
+        {title:'Servicio', dataIndex:'name', key:'name'},
+        {title:'FECHA', dataIndex:'created', render:(x)=><>{x.slice(0,10)} H{x.slice(11,19)}</>},
         {title:'Codigo', dataIndex:'code_internal', key:'code_internal'},
         {render:(x)=> <>
             <Button onClick={()=>processSelectClient(x)} icon={<EditOutlined />} style={styles.btn} size='small' type='primary'>Editar</Button>

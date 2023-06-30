@@ -58,8 +58,10 @@ const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
                         }
                     </Select>
                 </Form.Item>
-                <Form.Item label="Nombre proyecto" name="name" rules={[{required:true}]}>
-                    <Input />
+                <Form.Item label="Servicio" name="name" rules={[{required:true}]}>
+                    <Select defaultValue="MEE">
+                        <Option value='MEE'>MEE - 1.238</Option>
+                    </Select>
                 </Form.Item>
                 <Form.Item label="Codigo interno" name="code_internal" rules={[{required:true}]}>
                     <Input />
