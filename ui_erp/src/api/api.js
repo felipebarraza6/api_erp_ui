@@ -97,6 +97,18 @@ export const POST_FILE = async(endpoint, fields) => {
     return request
 }
 
+export const POST_FILE_NOT_TOKEN = async(endpoint, fields) => {
+    console.log(fields)
+    let data = new FormData()
+    fields.map((e)=> data.append(e.key, e.value))
+    const options = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    const request = await INSTANCE.post(endpoint, data,options)
+    return request
+}
 
 
 

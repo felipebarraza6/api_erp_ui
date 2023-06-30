@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Form, Input, Row, 
         Col, Button, Select,
         notification, Card } from 'antd'
-import { SaveFilled, ClearOutlined, PlusCircleOutlined, DeleteFilled, LeftCircleFilled } from '@ant-design/icons'
+import { SaveFilled, ClearOutlined, PlusCircleOutlined, LeftCircleFilled } from '@ant-design/icons'
 import { LiftingContext } from '../../containers/Lifting'
 import api from '../../api/endpoints'
 

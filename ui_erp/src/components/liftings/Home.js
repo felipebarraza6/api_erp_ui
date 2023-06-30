@@ -6,7 +6,7 @@ import HeaderMobile from './HeaderMobile'
 
 const Home = () => {
 
-    return(<Row align='middle'>
+    return(<Row align='top'>
         {window.innerWidth > 800 ? <Col xl={5} lg={5} xs={4}>
             <HeaderNav />
         </Col>:<Col xl={5} lg={5} xs={24}>

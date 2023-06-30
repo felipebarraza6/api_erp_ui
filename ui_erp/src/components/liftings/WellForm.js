@@ -144,10 +144,11 @@ const WellForm = ({init}) => {
                             <TextArea rows={3} placeholder={state.is_external ? 'Ingresa ubicación exacta': 'COORDENADAS'} style={styles.input} />                            
                         </Item>
                     </Col>
-                    <Col xl={6} lg={6} xs={24}>
-                        <Item name='link_location' >                
-                            <TextArea rows={3} prefix={<GoogleCircleFilled />} placeholder='Ingresa URL ubicación' style={styles.input} />                
-                        </Item>                            
+                    <Col xl={6} lg={6} xs={24}>                        
+                        <Item name='link_location' >                              
+                            <TextArea rows={3}  placeholder='Pega aquí la URL de la ubicación(Google Maps.)' style={styles.input} />                
+                        </Item>                
+                        <Button onClick={()=>window.open('https://www.google.com/maps')} size='small' type='primary' style={{marginTop:'5px', borderRadius:'5px', marginLeft:window.innerWidth>800 && '85px'}} icon={<GoogleCircleFilled />}>Ir a Google Maps</Button>                                        
                     </Col>
                 </Row>                       
             </Card>
@@ -214,6 +215,11 @@ const WellForm = ({init}) => {
 
 
 const styles = {
+    input2: {
+        borderRadius:'10px',
+        color: '#001529',
+        height:'73px' 
+    },
     titleTag: {
         backgroundColor:'#1890ff', color:'white',
         borderRadius:'5px', fontSize:'15px', marginBottom:'10px'

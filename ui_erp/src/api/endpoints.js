@@ -1,4 +1,4 @@
-import { GET_NOTTOKEN, GET, POST_LOGIN, POST, UPDATE, DELETE, POST_FILE } from './api'
+import { GET_NOTTOKEN, POST_FILE_NOT_TOKEN, GET, POST_LOGIN, POST, UPDATE, DELETE, POST_FILE } from './api'
 
 const login = async (data) => {
 
@@ -342,7 +342,7 @@ const delete_workload = async(id) => {
 }
 
 const list_liftings_external = async() => {
-    const rq = await GET('liftings/?is_external=true')
+    const rq = await GET_NOTTOKEN('liftings/?is_external=true')
     return rq
 }
 
@@ -352,24 +352,24 @@ const list_liftings_internal = async() => {
 }
 
 const create_lifting = async(data)=> {
-    const rq = await POST('liftings/', data)
+    const rq = await POST_LOGIN('liftings/', data)
     return rq
 }
 
 const create_external_client = async(data)=> {
-    const rq = await POST('clients_external/', data)
+    const rq = await POST_LOGIN('clients_external/', data)
     return rq
 }
 
 const create_well = async(data)=> {
-    const rq = await POST('wells/', data)
+    const rq = await POST_LOGIN('wells/', data)
     return rq
 }
 
 const create_photo = async(well)=> {
-    const rq = await POST_FILE('photos_well/', [
-        {key:'photo', value:well.file},
-           {key:'well', value:well.id}
+    const rq = await POST_FILE_NOT_TOKEN('photos_well/', [
+        { key:'photo', value:well.file },
+        { key:'well', value:well.id }
     ])  
     return rq
 }

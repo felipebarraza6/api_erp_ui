@@ -19,6 +19,7 @@ const HeaderNav = () => {
     const [count, setCount] = useState(0)
     var is_external = state.is_external
     var wells = state.wells
+
     const changeMenu = (x) => {
         if(x.key==='22'){
             dispatch({
@@ -53,8 +54,6 @@ const HeaderNav = () => {
         }            
         
     } 
-    
-
     
     const onSaveMyDevice = async() => {
         var liftingsLocalStorage = JSON.parse(localStorage.getItem('liftings')) || [];
@@ -155,8 +154,6 @@ const HeaderNav = () => {
         })
     }
         
-    
-
     useEffect(()=> {
         if(!state.is_external){
             setDisabledBtn(true)
