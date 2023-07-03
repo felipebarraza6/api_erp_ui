@@ -1,6 +1,11 @@
 export const reducer = (state, action) =>{
 
     switch (action.type) {
+        case 'SET_VISIBLE_MODAL':
+            return {
+                ...state,
+                is_visible_modal: action.payload.visible
+            }    
         case 'SET_TYPE_LIFTING_EXTERNAL':
             return {
                 ...state,

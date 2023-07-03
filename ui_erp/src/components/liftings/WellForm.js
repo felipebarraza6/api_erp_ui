@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Card, Row, Col, 
         Form, Input, Select, 
         Button, Tag, notification, Modal } from 'antd'
-import { GoogleCircleFilled, PlusSquareFilled } from '@ant-design/icons'
+import { GoogleCircleFilled, PlusSquareFilled, CloudUploadOutlined } from '@ant-design/icons'
 import { LiftingContext } from '../../containers/Lifting'
 import Well from './Well'
 
@@ -15,11 +15,12 @@ const WellForm = ({init}) => {
 
     const [form] = Form.useForm()
     const { state, dispatch } = useContext(LiftingContext)
+    const [visible, setVisible] = useState(false)
     const [coordinates, setCoordinates] = useState(null)    
     
 
     const onSetWell = (values) => {
-        
+
         
             dispatch({
                 type: 'ACTIVE_DEACTIVATE_ALERT_IMG',
@@ -57,8 +58,7 @@ const WellForm = ({init}) => {
                     payload: {
                         well: values
                     }
-                })
-                notification.success({message:'POZO AGREGADO CORRECTAMENTE'})
+                })                
             }
 
             dispatch({
@@ -69,6 +69,37 @@ const WellForm = ({init}) => {
             })
         
         
+    }
+
+    const setModalView = (values) => {
+        
+        Modal.confirm({
+            title:'Estas correcta la información ingresada del pozo?',
+            okText: init ? 'Si, actualizar información':'Si, subir información',
+            cancelText: 'No, continuar editando',   
+            width:'600px',                     
+            onOk: () => {
+                    onSetWell(values)                
+                    let secondsToGo = 15;
+                    const modal = Modal.success({
+                        title: 'Pozo ingresado correctamente',                        
+                        content: 
+                        <p>Se limpiara el formulario para ingresar un nuevo pozo o pincha en <b>FINALIZAR <CloudUploadOutlined /></b> para terminar el proceso, está ventana de cerrara en {secondsToGo} segundos.</p>                        
+                    });
+                    const timer = setInterval(() => {
+                      secondsToGo -= 1;
+                      modal.update({
+                        content: 
+                        <p>Se limpiara el formulario para ingresar un nuevo pozo o pincha en <b>FINALIZAR <CloudUploadOutlined /></b> para terminar el proceso, está ventana de cerrara en {secondsToGo} segundos.</p>                        
+                      });
+                    }, 1000);
+                    setTimeout(() => {
+                      clearInterval(timer);
+                      modal.destroy();
+                    }, secondsToGo * 1000);
+                  
+            }
+        })
     }
 
     const setWellDraft = (field, x) => {
@@ -85,6 +116,10 @@ const WellForm = ({init}) => {
         })
 
     }
+
+    const okNext = () => {
+
+    } 
 
     useEffect(()=> {        
         const getGpsPosition = () => {
@@ -121,7 +156,7 @@ const WellForm = ({init}) => {
 
 
     return(
-        <Form  layout={'inline'} onFinish={onSetWell} form={form} className='my-select-container' initialValues={state.selected_well}> 
+        <Form  layout={'inline'} onFinish={setModalView} form={form} className='my-select-container' initialValues={state.selected_well}>             
             <Card hoverable={true}                 
                 style={styles.card1}>
                 <Row>            
@@ -141,12 +176,12 @@ const WellForm = ({init}) => {
                     <Col xl={6} lg={6} xs={24} style={{marginBottom:window.innerWidth<800&&'5px'}}>                        
                         
                         <Item name='address_exact'>
-                            <TextArea rows={3} placeholder={state.is_external ? 'Ingresa ubicación exacta': 'COORDENADAS'} style={styles.input} />                            
+                            <TextArea rows={3} placeholder={state.is_external ? 'Ingresa dirección; Región, comuna, sector': 'COORDENADAS'} style={styles.input} />                            
                         </Item>
                     </Col>
                     <Col xl={6} lg={6} xs={24}>                        
                         <Item name='link_location' >                              
-                            <TextArea rows={3}  placeholder='Pega aquí la URL de la ubicación(Google Maps.)' style={styles.input} />                
+                            <TextArea rows={3}  placeholder='Pega aquí la URL de la ubicación del pozo (Google Maps.)' style={styles.input} />                
                         </Item>                
                         <Button onClick={()=>window.open('https://www.google.com/maps')} size='small' type='primary' style={{marginTop:'5px', borderRadius:'5px', marginLeft:window.innerWidth>800 && '85px'}} icon={<GoogleCircleFilled />}>Ir a Google Maps</Button>                                        
                     </Col>
@@ -155,19 +190,19 @@ const WellForm = ({init}) => {
             <Col lg={10} xl={10} xs={24}>
                 <Tag style={styles.titleTag}>Mediciones del pozo</Tag>
                 <Item style={styles.inputWell} name='flow_granted_dga'rules={[{required:true, message:'Campo boligatorio'}]} >
-                    <Input type='number' onChange={(value)=>setWellDraft('flow_granted_dga', value)} prefix={<Tag color='blue' style={styles.tag}>1</Tag>} suffix={<Tag color='blue' style={styles.tag}>Lt/SEG</Tag>} placeholder='Caudal otorgado' style={styles.input} />
+                    <Input type='number' onChange={(value)=>setWellDraft('flow_granted_dga', value)} prefix={<><Tag color='blue' style={styles.tag}>1</Tag></>} suffix={<><Tag color='blue' style={styles.tag}>Lt/SEG</Tag></>} placeholder={'*Caudal otorgado'} style={styles.input} />
                 </Item>
                 <Item style={styles.inputWell} name='pupm_depth' rules={[{required:true, message:'Campo boligatorio'}]}>
-                    <Input type='number' onChange={(value)=>setWellDraft('pupm_depth', value)} prefix={<Tag color='blue' style={styles.tag}>2</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Porfundidad de instalación bomba' style={styles.input} />
+                    <Input type='number' onChange={(value)=>setWellDraft('pupm_depth', value)} prefix={<Tag color='blue' style={styles.tag}>2</Tag>} suffix={<><Tag color='blue' style={styles.tag}>Mt</Tag></>} placeholder='*Porfundidad de instalación bomba' style={styles.input} />
                 </Item>
                 <Item style={styles.inputWell} name='inside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
-                    <Input type='number' onChange={(value)=>setWellDraft('inside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>3</Tag>} suffix={<Tag color='blue' style={styles.tag}>MM/PULG</Tag>} placeholder='Diámetro interior' style={styles.input} />
+                    <Input type='number' onChange={(value)=>setWellDraft('inside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>3</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='*Diámetro interior pozo' style={styles.input} />
                 </Item>                            
                 <Item style={styles.inputWell} name='outside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
-                    <Input type='number' onChange={(value)=>setWellDraft('outside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>4</Tag>} suffix={<Tag color='blue' style={styles.tag}>MM/PULG</Tag>} placeholder='Diámetro ducto salida bomba' style={styles.input} />
+                    <Input type='number' onChange={(value)=>setWellDraft('outside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>4</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='*Diámetro ducto salida bomba' style={styles.input} />
                 </Item>                            
                 <Item style={styles.inputWell} name='depth'>
-                    <Input type='number' onChange={(value)=>setWellDraft('depth', value)} prefix={<Tag color='blue' style={styles.tag}>5</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Profunfidad total' style={styles.input} />
+                    <Input type='number' onChange={(value)=>setWellDraft('depth', value)} prefix={<Tag color='blue' style={styles.tag}>5</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Profunfidad total pozo' style={styles.input} />
                 </Item>                                                                    
                 <Item style={styles.inputWell} name='static_level'>
                     <Input type='number' onChange={(value)=>setWellDraft('static_level', value)} prefix={<Tag color='blue' style={styles.tag}>6</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Nivel estático' style={styles.input} />
@@ -200,7 +235,7 @@ const WellForm = ({init}) => {
             </Col>
             <Col>
                 <Item>
-                    <Button icon={<><PlusSquareFilled /></>}  htmlType={'submit'} style={styles.btn} type='primary'>{init ? `Guardar cambios pozo "${state.selected_well.name.toUpperCase()}"`:'Crear'}</Button>
+                    <Button icon={<></>}  htmlType={'submit'} style={styles.btn} type='primary'>{init ? `Guardar cambios pozo "${state.selected_well.name.toUpperCase()}"`:'Aceptar'}</Button>
                 </Item>
             </Col>                                    
             <Col>

@@ -155,8 +155,8 @@ const styles = {
     card: {
         borderRadius:'10px',
         width:window.innerWidth<800 && '100%',
-        marginLeft: window.innerWidth > 800 && '-35px',
-        marginTop: window.innerWidth > 800 && '-40px', 
+        marginLeft: window.innerWidth > 800 && '-15px',
+        marginTop: window.innerWidth > 800 && '-15px', 
         backgroundColor:'white',
         border:'1px solid #white'       
     },

@@ -29,7 +29,8 @@ const Lifting = ({ is_external }) => {
             current: is_external ? 'C1':'22',            
         },
         active_alert_img: false,
-        conunt_form: 0
+        conunt_form: 0,
+        is_visible_modal: false,
     }
 
     const url_image = 'https://smarthydro.cl/static/media/icono_logo.4b5c24e4.png'
