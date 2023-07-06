@@ -14,5 +14,5 @@ from .supports import (SupportSectionModelSerializer,
                         AnswerTicketModelSerializerRetrieve,
                         TicketSupportModelSerializerRetrieve)
 
-from .projects import ProjectModelSerializer, ProjectRetrieveModelSerializer,TypeElement, ValueElement
+from .projects import CompanyDeparmentModelSerializer, ProjectModelSerializer, ProjectRetrieveModelSerializer,TypeElement, ValueElement
 from .liftings import RetrieveWellModelSerializer, WellModelSerializer, LiftingModelSerializer, PhotoWellModelSerializer, RetrieveLiftingModelSerialzer, ResolutionInfoModelSerializer

@@ -2,9 +2,13 @@
 from rest_framework import serializers
 
 # Models
-from api.erp.models import Project, TypeElement, ValueElement
+from api.erp.models import Project, TypeElement, ValueElement, CompanyDeparment
 from .clients import ClientModelSerializer
 
+class CompanyDeparmentModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompanyDeparment
+        fields = '__all__'
 
 class ProjectModelSerializer(serializers.ModelSerializer):    
     class Meta:

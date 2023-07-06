@@ -394,6 +394,31 @@ const update_lifting = async(uuid, data) => {
     return rq
 }
 
+const create_company_departament = async(data)=> {
+    const rq = await POST('company_deparments/', data)
+    return rq
+}
+
+const retrieve_company_deparment = async(id)=> {
+    const rq = await GET(`company_deparments/?well=${id}`)
+    return rq
+}
+
+const update_compant_deparment = async(data, id)=> {
+    const rq = await UPDATE(`company_deparments/${id}/`, data)
+    return rq
+}
+
+const list_compant_deparments = async()=> {
+    const rq = await UPDATE(`company_deparments`)
+    return rq
+}
+
+const delete_company_deparment = async(id) => {
+    const rq = await DELETE(`company_deparments/${id}/`)
+    return rq
+}
+
 
 const api = {
     user:{
@@ -436,6 +461,13 @@ const api = {
         search_type_task
     },
     projects: {
+        company_deparments: {
+            create: create_company_departament,
+            list: list_compant_deparments,
+            update: update_compant_deparment,
+            retrieve: retrieve_company_deparment,
+            delete: delete_company_deparment
+        },
         project:{
             create: create_project,
             list: list_project,

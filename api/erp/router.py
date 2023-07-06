@@ -37,6 +37,7 @@ router.register(r'wells', views_liftings.WellsViewSet, basename='wells')
 router.register(r'workloads', views_clients.ChargeWorkloadViewSet, basename='workloads')
 router.register(r'photos_well', views_liftings.PhotoWellViewSet, basename='photos_well')
 router.register(r'resolution_info', views_liftings.ResolutionInfoViewSet, basename='resolution_info')
+router.register(r'company_deparments', views_projects.CompanyDeparmentViewSet, basename='company_deparments')
 
 
 urlpatterns = [
