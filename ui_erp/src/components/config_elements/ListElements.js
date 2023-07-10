@@ -11,10 +11,10 @@ const ListElements = ({count, setCount, setSelectElement}) => {
         { title:'Nombre', dataIndex: 'name'},
         { title:'Descripción', dataIndex: 'description'},
         { title:'Posicion', dataIndex: 'position'},
-        { title:'Formato', render: (x)=> x.type_file ? x.type_file:'NO ES ARCHIVO'},
+        { title:'Departamento', render: (x)=> x.deparment && x.deparment.name},
         {render: (x)=>{
             return(<>
-                <Button style={{marginRight:'10px'}} size='small' type='primary' onClick={()=>setSelectElement(x)}>
+                <Button style={{marginRight:'10px'}} size='small' type='primary' onClick={()=>setSelectElement({...x, deparment: x.deparment && x.deparment.id})}>
                     <EditFilled />
                 </Button>
                 <Popconfirm title='Estas seguro de eliminar esta entrada?' onConfirm={async()=> {

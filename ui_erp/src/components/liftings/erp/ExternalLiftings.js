@@ -6,6 +6,7 @@ import { Table, Button, Modal, Select,
 import ResolutionForm from './ResolutionForm'
 import { UserOutlined, CloudDownloadOutlined, EyeFilled, FileImageFilled } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import { BASE_URL_IMG } from '../../../api/api'
 
 const { Option } = Select
 const ExternalLiftings = () => {
@@ -118,8 +119,8 @@ const ExternalLiftings = () => {
                 {x.photos.map((file)=>
                     <Col span={8} style={{paddingRight:'3px', paddingLeft:'3px'}}>
                 <Tooltip title='Has click para abrir la imagén!'>
-                    <a icon={<FileImageFilled/>} type='ghost' style={{margin:'5px', marginTop:'20px'}} onClick={()=>window.open(`http://localhost:8000/${file.photo}`)}>                        
-                        <img src={`http://localhost:8000/${file.photo}`} style={{width:'100%', borderRadius:'10px', }} />
+                    <a icon={<FileImageFilled/>} type='ghost' style={{margin:'5px', marginTop:'20px'}} onClick={()=>window.open(`${BASE_URL_IMG}${file.photo}`)}>                        
+                        <img src={`${BASE_URL_IMG}${file.photo}`} style={{width:'100%', borderRadius:'10px', }} />
                     </a></Tooltip></Col>)}</Row>
                   </Collapse.Panel>
                   <Collapse.Panel key='3' header='Resolución'>                    

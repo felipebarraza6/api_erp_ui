@@ -15,8 +15,9 @@ import { DashboardOutlined,
           UnorderedListOutlined,
           ProfileFilled,
           FolderOpenOutlined, 
+          PercentageOutlined,
           BuildFilled,
-         FileOutlined } from '@ant-design/icons'
+         SlidersFilled } from '@ant-design/icons'
 
 //Build
 
@@ -103,16 +104,16 @@ const Home = () =>{
                           Gestionar proyectos
                         </Link>                        
                       </Menu.Item>                      
-                      <Menu.Item key="9">
+                      <Menu.Item key="9" >
                         <Link to="/config_entry">
-                          <ToolOutlined />
-                          Configurar entradas
+                          <SlidersFilled />
+                          Elementos
                         </Link>                        
                       </Menu.Item>
                       <Menu.Item key="10">
                         <Link to="/config_deparments">
                           <ApartmentOutlined />
-                          Configurar departamentos
+                          Departamentos
                         </Link>                        
                       </Menu.Item>
                     </Menu.SubMenu>

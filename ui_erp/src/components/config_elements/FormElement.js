@@ -10,6 +10,7 @@ const { Option } = Select
 const FormElement = ({ count, setCount, selectElement, setSelectElement }) => {
 
     const [form] = Form.useForm()
+    const [deparments, setDeparments] = useState([])
 
     const [updateForm, setUpdateForm] = useState(false)
 
@@ -49,7 +50,15 @@ const FormElement = ({ count, setCount, selectElement, setSelectElement }) => {
         
     }
 
+    const getDeparments = async() => {
+        const rq = await api.projects.company_deparments.list().then((r)=> {
+            setDeparments(r.data.results)
+            console.log(r)
+        })
+    }
+
     useEffect(()=> {
+        getDeparments()
         if(selectElement){
             setUpdateForm(true)
             setTimeout(() => {
@@ -61,26 +70,16 @@ const FormElement = ({ count, setCount, selectElement, setSelectElement }) => {
     return(<Card hoverable bordered>
         {!updateForm && 
         <Form initialValues={selectElement} form={form} onFinish={onCreate} layout='vertical' style={{padding:'10px'}}>
-        <Form.Item label='Nombre visible' name='name' rules={[{required:true, message:'Ingresa el nombre...'}]}>
+        <Form.Item label='Nombre elemento' name='name' rules={[{required:true, message:'Ingresa el nombre...'}]}>
             <Input />
         </Form.Item>
         <Form.Item label='Descripción' name='description' >
-            <Input.TextArea rows={4} />
-        </Form.Item>
-        <Form.Item label='Tipo entrada' name='type' rules={[{required:true, message:'Selecciona una opcion...'}]}>
-            <Select placeholder='Debes seleccionar el tipo de entrada'>
-                <Option value='is_file'>Archivo</Option>
-                <Option value='is_info'>Información</Option>
-            </Select>
+            <Input.TextArea rows={3} />
         </Form.Item>   
-        <Form.Item label='Tipo archivo' name='type_file' rules={[{required:true, message:'Selecciona una opcion...'}]}>
-            <Select placeholder='Debes seleccionar el tipo de archivo'>
-                <Option value='pdf'><FilePdfOutlined style={{fontSize:'16px', color:'red'}} /> PDF</Option>
-                <Option value='word'><FileWordOutlined style={{fontSize:'16px', color:'blue'}} /> WORD</Option>
-                <Option value='excel'><FileExcelOutlined style={{fontSize:'16px', color:'green'}} /> EXCEL</Option>
-                <Option value='powerpoint'><FileExcelOutlined style={{fontSize:'16px', color:'orange'}} /> POWER POINT</Option>
-                <Option value='image'><FileImageOutlined style={{fontSize:'16px', color:'purple'}} /> IMGAGEN</Option>
-                <Option value='s/n'>SIN TIPO DE ARCHIVO</Option>
+        <Form.Item label='Departamento' name='deparment' rules={[{required:true, message:'Selecciona una opcion...'}]}>
+            <Select placeholder='Debes seleccionar un departamento'>
+                {deparments.map((deparment)=><Option value={deparment.id}>{deparment.name}</Option>)}
+                <Option value='GLOBAL'>GLOBAL</Option>
             </Select>
         </Form.Item>  
         <Form.Item label='Posicion' name='position'>

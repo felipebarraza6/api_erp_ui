@@ -17,8 +17,12 @@ const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
     }
 
     const onFinish = async(values) => {
-        console.log(values)
+        
+            
+            
+
         if(!selectProject){
+            
             const rq1 = api.projects.project.create(values).then((res)=> {
                 console.log(res)
                 notification.success({message:'Proyecto creado correctamente!'})
@@ -30,19 +34,28 @@ const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
                 console.log(res)
                 notification.success({message:'Proyecto actualizado correctamente!'})
                 setCount(count+1)
-                setSelectClient(null)
+                setSelectClient(null)                
                 form.resetFields()
+                form.setFieldsValue({
+                    service: 'MEE'
+                })
             }) 
         }
         
     }
 
     useEffect(()=> {
+        form.setFieldsValue({
+            service: 'MEE'
+        })
         getClients()
         if(selectProject){
             setUpdateForm(true)
             setTimeout(() => {
                 setUpdateForm(false)
+                form.setFieldsValue({
+                    service: 'MEE'
+                })
               }, 1000);
         }
     }, [selectProject])
@@ -51,19 +64,19 @@ const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
         <Card hoverable bordered>
             {!updateForm && 
             <Form layout='vertical' onFinish={onFinish} form={form} initialValues={selectProject}>
-                <Form.Item label="Cliente" name="client" rules={[{required:true}]}>
+                <Form.Item label="Cliente" name="client" rules={[{required:true, message:'Campo obligatorio'}]}>
                     <Select placeholder="Selecciona un cliente">
                         {enterprises &&
                             enterprises.map((x)=><Option key="x.id" value={x.id}>{x.name}</Option>)                            
                         }
                     </Select>
                 </Form.Item>
-                <Form.Item label="Servicio" name="name" rules={[{required:true}]}>
-                    <Select defaultValue="MEE">
+                <Form.Item label="Servicio" name="service" rules={[{required:true}]}>
+                    <Select defaultValue={'MEE'} >
                         <Option value='MEE'>MEE - 1.238</Option>
                     </Select>
                 </Form.Item>
-                <Form.Item label="Codigo interno" name="code_internal" rules={[{required:true}]}>
+                <Form.Item label="Codigo interno" name="code_internal" >
                     <Input />
                 </Form.Item>
                 <Form.Item label="Descripción" name="description">

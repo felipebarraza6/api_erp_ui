@@ -15,7 +15,7 @@ const ConfigElements = () => {
 
     return(<Row>
         <Col span={24}>
-            <Title level={3}>Configuración de entradas en modulo de proyectos</Title>
+            <Title level={3}>Configuración de elementos en modulo de proyectos</Title>
         </Col>
         <Col span={16}>
             <ListElements setSelectElement={setSelectElement} count={count} setCount={setCount} />

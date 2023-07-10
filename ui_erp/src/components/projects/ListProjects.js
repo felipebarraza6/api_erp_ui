@@ -36,7 +36,7 @@ const ListProjects = ({count, setSelectClient, setCount}) => {
 
     const columns = [        
         {title: 'Cliente', render:(x)=> x.client.name},
-        {title:'Servicio', dataIndex:'name', key:'name'},
+        {title:'Servicio', dataIndex:'service', key:'name'},
         {title:'FECHA', dataIndex:'created', render:(x)=><>{x.slice(0,10)} H{x.slice(11,19)}</>},
         {title:'Codigo', dataIndex:'code_internal', key:'code_internal'},
         {render:(x)=> <>

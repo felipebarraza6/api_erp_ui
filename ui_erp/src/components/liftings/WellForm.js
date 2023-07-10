@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Card, Row, Col, 
-        Form, Input, Select, 
+        Form, Input, Select, Affix, 
         Button, Tag, notification, Modal } from 'antd'
 import { GoogleCircleFilled, PlusSquareFilled, CloudUploadOutlined } from '@ant-design/icons'
 import { LiftingContext } from '../../containers/Lifting'
@@ -84,7 +84,8 @@ const WellForm = ({init}) => {
                     const modal = Modal.success({
                         title: 'Pozo ingresado correctamente',                        
                         content: 
-                        <p>Se limpiara el formulario para ingresar un nuevo pozo o pincha en <b>FINALIZAR <CloudUploadOutlined /></b> para terminar el proceso, está ventana de cerrara en {secondsToGo} segundos.</p>                        
+                        <p>Se limpiará el formulario para ingresar un nuevo pozo o pincha en <b>FINALIZAR 
+                            <CloudUploadOutlined /></b> para terminar el proceso, esta ventana se cerrará en {secondsToGo} segundos.</p>                        
                     });
                     const timer = setInterval(() => {
                       secondsToGo -= 1;
@@ -156,18 +157,18 @@ const WellForm = ({init}) => {
 
 
     return(
-        <Form  layout={'inline'} onFinish={setModalView} form={form} className='my-select-container' initialValues={state.selected_well}>             
+        <Form  layout={'vertical'} onFinish={setModalView} form={form} className='my-select-container' initialValues={state.selected_well}>             
             <Card hoverable={true}                 
                 style={styles.card1}>
                 <Row>            
                     <Col xl={6} lg={6} xs={24} style={{marginBottom:window.innerWidth<800&&'5px'}}>
-                        <Item name='name'  rules={[{required:true, message:'Campo boligatorio'}]}>  
+                        <Item name='name' label='Nombre pozo' rules={[{required:true, message:'Campo boligatorio'}]}>  
                             <Input  placeholder='Nombre pozo' style={styles.input} />
                         </Item>
                     </Col>
                     <Col xl={6} lg={6} xs={24} style={{marginBottom:window.innerWidth<800&&'5px'}}>
-                        <Item name='pickup_type' rules={[{required:true, message:'Campo boligatorio'}]}>
-                            <Select placeholder='Tipo de captación' dropdownStyle={styles.input}>
+                        <Item name='pickup_type' label='Tipo de captación' rules={[{required:true, message:'Campo boligatorio'}]}>
+                            <Select placeholder='Tipo de captación' dropdownStyle={styles.input} style={{width:'90%'}}>
                                 <Option value='pozo'>Pozo</Option>
                                 <Option value='puntera'>Puntera</Option>
                             </Select>
@@ -175,50 +176,51 @@ const WellForm = ({init}) => {
                     </Col>
                     <Col xl={6} lg={6} xs={24} style={{marginBottom:window.innerWidth<800&&'5px'}}>                        
                         
-                        <Item name='address_exact'>
+                        <Item label='Dirección' rules={[{required:state.is_external ? true:false, message:'Campo boligatorio'}]} name='address_exact'>
                             <TextArea rows={3} placeholder={state.is_external ? 'Ingresa dirección; Región, comuna, sector': 'COORDENADAS'} style={styles.input} />                            
                         </Item>
                     </Col>
                     <Col xl={6} lg={6} xs={24}>                        
-                        <Item name='link_location' >                              
+                        <Item label='Link ubicación' name='link_location' >                              
                             <TextArea rows={3}  placeholder='Pega aquí la URL de la ubicación del pozo (Google Maps.)' style={styles.input} />                
                         </Item>                
                         <Button onClick={()=>window.open('https://www.google.com/maps')} size='small' type='primary' style={{marginTop:'5px', borderRadius:'5px', marginLeft:window.innerWidth>800 && '85px'}} icon={<GoogleCircleFilled />}>Ir a Google Maps</Button>                                        
                     </Col>
                 </Row>                       
             </Card>
+      <Row>
             <Col lg={10} xl={10} xs={24}>
                 <Tag style={styles.titleTag}>Mediciones del pozo</Tag>
-                <Item style={styles.inputWell} name='flow_granted_dga'rules={[{required:true, message:'Campo boligatorio'}]} >
-                    <Input type='number' onChange={(value)=>setWellDraft('flow_granted_dga', value)} prefix={<><Tag color='blue' style={styles.tag}>1</Tag></>} suffix={<><Tag color='blue' style={styles.tag}>Lt/SEG</Tag></>} placeholder={'*Caudal otorgado'} style={styles.input} />
+                <Item label={'Caudal otorgado'} style={styles.inputWell} name='flow_granted_dga'rules={[{required:true, message:'Campo boligatorio'}]} >
+                    <Input type='number' onChange={(value)=>setWellDraft('flow_granted_dga', value)} prefix={<><Tag color='blue' style={styles.tag}>1</Tag></>} suffix={<><Tag color='blue' style={styles.tag}>Lt/SEG</Tag></>} placeholder={'LITROS'} style={styles.input} />
                 </Item>
-                <Item style={styles.inputWell} name='pupm_depth' rules={[{required:true, message:'Campo boligatorio'}]}>
-                    <Input type='number' onChange={(value)=>setWellDraft('pupm_depth', value)} prefix={<Tag color='blue' style={styles.tag}>2</Tag>} suffix={<><Tag color='blue' style={styles.tag}>Mt</Tag></>} placeholder='*Porfundidad de instalación bomba' style={styles.input} />
+                <Item label={'Profunfidad instalación bomba'} style={styles.inputWell} name='pupm_depth' rules={[{required:true, message:'Campo boligatorio'}]}>
+                    <Input type='number' onChange={(value)=>setWellDraft('pupm_depth', value)} prefix={<Tag color='blue' style={styles.tag}>2</Tag>} suffix={<><Tag color='blue' style={styles.tag}>Mt</Tag></>} placeholder='METROS' style={styles.input} />
                 </Item>
-                <Item style={styles.inputWell} name='inside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
-                    <Input type='number' onChange={(value)=>setWellDraft('inside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>3</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='*Diámetro interior pozo' style={styles.input} />
+                <Item label={'Describe interior pozo'} style={styles.inputWell} name='inside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
+                    <Input type='number' onChange={(value)=>setWellDraft('inside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>3</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='MILIMETROS/PULGADAS' style={styles.input} />
                 </Item>                            
-                <Item style={styles.inputWell} name='outside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
-                    <Input type='number' onChange={(value)=>setWellDraft('outside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>4</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='*Diámetro ducto salida bomba' style={styles.input} />
+                <Item label={'Diámetro ducto salida bomba'} style={styles.inputWell} name='outside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
+                    <Input type='number' onChange={(value)=>setWellDraft('outside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>4</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='MILIMETROS/PULGADAS' style={styles.input} />
                 </Item>                            
-                <Item style={styles.inputWell} name='depth'>
-                    <Input type='number' onChange={(value)=>setWellDraft('depth', value)} prefix={<Tag color='blue' style={styles.tag}>5</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Profunfidad total pozo' style={styles.input} />
+                <Item label={'Profunfidad total pozo'} style={styles.inputWell} name='depth'>
+                    <Input type='number' onChange={(value)=>setWellDraft('depth', value)} prefix={<Tag color='blue' style={styles.tag}>5</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='METROS' style={styles.input} />
                 </Item>                                                                    
-                <Item style={styles.inputWell} name='static_level'>
-                    <Input type='number' onChange={(value)=>setWellDraft('static_level', value)} prefix={<Tag color='blue' style={styles.tag}>6</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Nivel estático' style={styles.input} />
+                  <Item label='Nivel estático' style={styles.inputWell} name='static_level'>
+                    <Input   type='number' onChange={(value)=>setWellDraft('static_level', value)} prefix={<Tag color='blue' style={styles.tag}>6</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='METROS' style={styles.input} />
                 </Item>                            
-                <Item style={styles.inputWell} name='dynamic_level'>
-                    <Input type='number' onChange={(value)=>setWellDraft('dynamic_level', value)} prefix={<Tag color='blue' style={styles.tag}>7</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='Nivel dinámico' style={styles.input} />
+                <Item label='Nivel dinámico' style={styles.inputWell} name='dynamic_level'>
+                    <Input type='number' onChange={(value)=>setWellDraft('dynamic_level', value)} prefix={<Tag color='blue' style={styles.tag}>7</Tag>} suffix={<Tag color='blue' style={styles.tag}>Mt</Tag>} placeholder='METROS' style={styles.input} />
                 </Item>                
                 <Tag style={styles.titleTagInfo}>Información adiconal</Tag>
                 <Item style={styles.inputWell} name='is_sensor_flow'>
-                    <Select placeholder='¿Cuenta con sensor de flujo?' dropdownStyle={styles.input}>
+                    <Select placeholder='¿Cuenta con sensor de flujo?' style={styles.input} dropdownStyle={styles.input}>
                         <Option value={true}>SI</Option>
                         <Option value={false}>NO</Option>
                     </Select>
                 </Item>
                 <Item style={styles.inputWell} name='is_feasibility_electrical'>
-                    <Select placeholder=' ¿Cuenta con factibilidad eléctrica 220v?' dropdownStyle={styles.input}>
+                    <Select placeholder=' ¿Cuenta con factibilidad eléctrica 220v?' style={styles.input} dropdownStyle={styles.input}>
                         <Option value={true}>SI</Option>
                         <Option value={false}>NO</Option>
                     </Select>
@@ -228,10 +230,10 @@ const WellForm = ({init}) => {
                 </Item>
                                             
             </Col>
-            <Col xl={14} lg={14} xs={24}>
+            <Col xl={14} lg={14} xs={24}><Affix>
                 <Card style={styles.card2}>
                     <Well />
-                </Card>
+                </Card></Affix>
             </Col>
             <Col>
                 <Item>
@@ -244,6 +246,7 @@ const WellForm = ({init}) => {
                 </Item>}
                 
             </Col>
+</Row>
         </Form>)
 
 }
@@ -271,10 +274,12 @@ const styles = {
     },
     input: {
         borderRadius:'10px',
-        color: '#001529' 
+        color: '#001529',
+        width:'90%',
     },
     btn: {
         borderRadius:'10px',        
+        marginRight: '10px'
     },
     inputWell: {
         marginBottom:'10px'

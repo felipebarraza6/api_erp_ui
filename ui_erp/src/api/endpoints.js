@@ -410,7 +410,7 @@ const update_compant_deparment = async(data, id)=> {
 }
 
 const list_compant_deparments = async()=> {
-    const rq = await UPDATE(`company_deparments`)
+    const rq = await GET(`company_deparments`)
     return rq
 }
 

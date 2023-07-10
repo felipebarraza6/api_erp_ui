@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Menu, Row, Col, Modal,
-        Button, Typography, Select, notification } from 'antd'
+        Button, Typography, Select, notification, Affix } from 'antd'
 import { LiftingContext } from '../../containers/Lifting'
 import { UserOutlined, OrderedListOutlined, CloudUploadOutlined, CloudDownloadOutlined,
     PlusCircleFilled, EditFilled, ArrowLeftOutlined, LoadingOutlined, SaveFilled } from '@ant-design/icons'
@@ -168,8 +168,8 @@ const HeaderNav = () => {
             <Row justify='space-around' align='middle'  className='my-select-container'>
                 <Col span={24} style={{textAlign:'center'}}>
                     {loadSend && <>
-                        <Title level={3}>Tus datos ingresados estan siendo procesados...</Title>
-                        <Paragraph>En cuanto recibamos tu informacion nos pondremos en contacto a la brevedad...</Paragraph>
+                        <Title level={3}>Tus datos ingresados están siendo procesados...</Title>
+                        <Paragraph>En cuanto recibamos tú información nos pondremos en contacto a la brevedad...</Paragraph>
                         <LoadingOutlined style={{fontSize:'25px', marginTop:'20px', marginBottom:'35px'}} /><>
                         </>
                     </>}
@@ -192,9 +192,9 @@ const HeaderNav = () => {
                 
             </Row>
         </Modal>
-        <Col>        
+        <Col><Affix >       
             <Menu selectedKeys={state.steps.current} defaultOpenKeys={['P2']} onClick={changeMenu} theme='dark' mode='inline' style={styles.menu} title='a'>
-                <img src={imgsmart} width={'85%'} style={{paddingLeft:'20px', paddingTop:'20px',marginBottom:'40px'}} />
+                <img src={imgsmart} width={'85%'} style={{paddingLeft:'20px', paddingTop:'20px',marginBottom:'60px'}} />
                 {is_external &&
                     <Menu.Item key={state.client_external ? 'C1':'CE'}>{!state.client_external.is_draft ? 
                         <UserOutlined/>:<EditFilled />} Cliente</Menu.Item>} 
@@ -208,9 +208,9 @@ const HeaderNav = () => {
                         {JSON.parse(localStorage.getItem('liftings')) ?  JSON.parse(localStorage.getItem('liftings')).length: '0'}                                                
                         )
                 </Menu.Item>}
-                <Menu.Item disabled={state.wells.length >0?false:true} key='F3'><CloudUploadOutlined/> Finalizar</Menu.Item>               
+                <Menu.Item style={{marginTop:'25px'}} disabled={state.wells.length >0?false:true} key='F3'><CloudUploadOutlined/> Finalizar</Menu.Item>               
                                                                 
-            </Menu>
+            </Menu></Affix>
         </Col>
     </Row>)
 }
@@ -221,7 +221,7 @@ const styles = {
         paddingTop: '10px',
         paddingBottom: '10px',
         width:'200px',
-        height:'90vh'
+        height:'92vh'
     },
     btn: {
         borderRadius: '10px',        

@@ -10,7 +10,8 @@ class CompanyDeparmentModelSerializer(serializers.ModelSerializer):
         model = CompanyDeparment
         fields = '__all__'
 
-class ProjectModelSerializer(serializers.ModelSerializer):    
+class ProjectModelSerializer(serializers.ModelSerializer):   
+   
     class Meta:
         model = Project
         fields = '__all__'
@@ -24,6 +25,12 @@ class ProjectRetrieveModelSerializer(serializers.ModelSerializer):
 
 
 class TypeElementModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TypeElement
+        fields = '__all__'
+
+class TypeElementRetrieveModelSerializer(serializers.ModelSerializer):
+    deparment = CompanyDeparmentModelSerializer()
     class Meta:
         model = TypeElement
         fields = '__all__'

@@ -68,7 +68,7 @@ const Well = () => {
             </>}>
             <Card hoverable={true} style={styles.card} >                        
             
-            <Tag color={'blue'} style={styles.tag}><FileImageOutlined/> FOTOS {state.photos.length}</Tag>
+            <Tag  style={styles.tag}><FileImageOutlined/> FOTOS {state.photos.length}</Tag>
             {state.photos.length===0&state.active_alert_img===true?
                 <Paragraph style={{borderRadius:'6px', color:'rgb(194, 24, 7, 76)',backgroundColor:'rgb(194, 24, 7, 0.1)',border:'1px solid red', padding:'5px'}}>DEBES INGRESAR AL MENOS UNA IMÁGEN PARA CONTINUAR</Paragraph>:
                 ''}
@@ -90,7 +90,7 @@ const Well = () => {
                 <Paragraph style={{color:'#262626'}}>
                     3) Foto del detalle del ducto de salida del pozo.
                 </Paragraph>                              
-            <Tag color={'blue'} style={styles.tag}><FileImageOutlined/> FOTOS {state.photos.length}</Tag>
+            <Tag  style={styles.tag}><FileImageOutlined/> FOTOS {state.photos.length}</Tag>
             {state.photos.length===0&state.active_alert_img===true?
                 <Paragraph style={{borderRadius:'6px', color:'rgb(194, 24, 7, 76)',backgroundColor:'rgb(194, 24, 7, 0.1)',border:'1px solid red', padding:'5px'}}>DEBES INGRESAR AL MENOS UNA IMÁGEN PARA CONTINUAR</Paragraph>:
                 ''}
@@ -147,6 +147,7 @@ const styles = {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        marginTop:'50px',
         width: '100%',
         height: '500px'
         
@@ -161,7 +162,7 @@ const styles = {
         border:'1px solid #white'       
     },
     row: {
-        height: window.innerWidth > 800 ? '69vh':  '70vh'
+        height: window.innerWidth > 800 ? '82vh':  '70vh'
     },
     btn: {
         borderRadius:'5px',   
@@ -169,11 +170,8 @@ const styles = {
         marginBottom:'10px',        
     },
     tag: {
-        fontSize:'16px',
-        borderRadius:'5px',        
-        padding:'5px',
-        marginBottom:'10px',
-        
+      backgroundColor:'#1890ff', color:'white', paddingTop:'5px', paddingBottom:'5px',
+        borderRadius:'5px', fontSize:'14px', marginBottom:'10px'
     },
     tagImage: {
         fontSize:'13px',
