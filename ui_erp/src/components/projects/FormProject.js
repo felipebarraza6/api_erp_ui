@@ -5,7 +5,6 @@ const { Option } = Select
 
 const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
 
-    console.log(selectProject)
 
     const [enterprises, setEnterprises] = useState(null)    
     const [updateForm, setUpdateForm] = useState(false)
@@ -17,9 +16,6 @@ const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
     }
 
     const onFinish = async(values) => {
-        
-            
-            
 
         if(!selectProject){
             
@@ -76,25 +72,30 @@ const FormProject = ({setCount, count, selectProject, setSelectClient}) => {
                         <Option value='MEE'>MEE - 1.238</Option>
                     </Select>
                 </Form.Item>
-                <Form.Item label="Codigo interno" name="code_internal" >
+                <Form.Item label="Codigo interno" name="code_internal">
                     <Input />
                 </Form.Item>
                 <Form.Item label="Descripción" name="description">
                     <Input.TextArea rows={4} />
                 </Form.Item>
                 <Form.Item>
-                    <Button htmlType='submit' type="primary">Guardar proyecto</Button>
-                    {selectProject ? <Button danger onClick={()=>{                        
+                    <Button htmlType='submit' type="primary">{selectProject ? 'Actualizar':'Crear Proyecto'}</Button>
+                    {selectProject ? <Button danger onClick={()=>{        
                         setSelectClient(null)
+                        setUpdateForm(false)
                         form.resetFields()
                     }}>Cancelar</Button>:<Button onClick={()=>form.resetFields()} >Limpiar</Button>}
-                    
                 </Form.Item>
-                
             </Form>}
         </Card>
     </>)
 
+}
+
+const styles = {
+    btn: {
+        marginRight: '10px'
+    }
 }
 
 

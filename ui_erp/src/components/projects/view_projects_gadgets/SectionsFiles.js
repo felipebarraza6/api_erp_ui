@@ -4,22 +4,11 @@ import { Button, Tooltip, Descriptions } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import SingleElement from './SingleElement'
 
-const SectionFiles = () => {
+const SectionFiles = ({ elements }) => {
 
-    const [elements, setElements] = useState(null)
+  console.log(elements)
 
-    const getData = async() => {
-        const rq = await api.projects.types_elements.list('EP').then((r)=> {            
-            setElements(r.data.results)
-        })
-    }
-
-    console.log(elements)
-
-    useEffect(()=> {
-        getData()
-    }, [])
-
+    
     return(<>
         {elements && 
             

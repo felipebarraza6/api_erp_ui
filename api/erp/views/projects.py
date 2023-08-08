@@ -18,7 +18,7 @@ from rest_framework.permissions import (
 )
 
 from api.erp.models import Project, TypeElement, ValueElement, CompanyDeparment
-from api.erp.serializers.projects import (TypeElementRetrieveModelSerializer, CompanyDeparmentModelSerializer, ProjectModelSerializer, ProjectRetrieveModelSerializer,TypeElementModelSerializer, ValueElementSerializer)
+from api.erp.serializers.projects import (TypeElementRetrieveModelSerializer, CompanyDeparmentModelSerializer, ProjectModelSerializer, ProjectRetrieveModelSerializer,TypeElementModelSerializer, ValueElementSerializer, RetrieveValueElementSerializer)
 
 
 
@@ -106,7 +106,13 @@ class ValueElementViewSet(mixins.CreateModelMixin,
     filter_backends = (filters.DjangoFilterBackend,)
     ordering = ('created', )
     queryset = ValueElement.objects.all()
-    serializer_class = ValueElementSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return RetrieveValueElementSerializer
+        else:
+            return ValueElementSerializer 
+
 
     class ProjectFilter(filters.FilterSet):
         

@@ -12,7 +12,7 @@ const Departaments = () => {
             <ListDepartaments count={count} setCount={setCount} />
         </Col>
         <Col span={12} style={styles.col}>
-            <FormDeparment />
+            <FormDeparment count={count} setCount={setCount} />
         </Col>
     </Row>)
 

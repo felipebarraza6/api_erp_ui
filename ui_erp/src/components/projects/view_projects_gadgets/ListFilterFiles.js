@@ -47,11 +47,11 @@ const ListFilterFiles = ({ properties, element, count, setCount, countA, setCoun
                   {properties && properties.icon} {file.name.toUpperCase()}
                   </>
                 }
-                extra={file.code}
+                extra={<>{file.code && file.code} <b>{file.file.slice(-4)}</b></>}
                 style={{borderColor:properties&&properties.color, borderRadius:'10px', borderWidth:'2px', margin:'4px'}}
               >
-                <Tag color={properties&&properties.color}>{formatDate(file.created.slice(0,10))} /{file.created.slice(11,16)}hrs</Tag>
-  
+                <Tag style={{marginBottom:'5px'}} color={properties&&properties.color}>{formatDate(file.created.slice(0,10))} /{file.created.slice(11,16)}hrs</Tag>
+                <Tag color='blue'>{file.user.email}</Tag> 
                 
                 <Paragraph style={{ marginTop: "20px" }}>
                 {file.note !== 'undefined' ?

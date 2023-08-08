@@ -103,10 +103,6 @@ const UploadValueFile = ({ element, countA, setCountA }) => {
   return (
     <Row>
       <Col span={18}>
-        <Paragraph>
-            Formato de archivos designados para este tipo de documento:{" "}
-          {validateTypeFileAndColor(element.type_file, false, true)}
-        </Paragraph>
         <ListFilterFiles properties={properties} element={element} count={count} setCount={setCount} countA={countA} setCountA={setCountA} />
       </Col>
       <Col span={6}>

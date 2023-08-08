@@ -14,7 +14,7 @@ import Profile from './Profile'
 
 const MenuHeader = () =>{   
 
-    const rightStyle = {position: 'absolute', top: 0, right: 0}    
+    const rightStyle = { position: 'absolute', top: 0, right: 0 }    
 
     const { dispatch } = useContext(AuthContext)
 
@@ -25,8 +25,7 @@ const MenuHeader = () =>{
     return (                
             <Menu mode="horizontal" theme="dark" style={rightStyle}>
                 <Profile />
-                <Menu.Item onClick={Logout}>
-                    <LogoutOutlined />
+                <Menu.Item onClick={Logout} icon={<LogoutOutlined />}>
                     Cerrar Sesión
                 </Menu.Item>
             </Menu>                

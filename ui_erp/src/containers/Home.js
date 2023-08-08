@@ -9,15 +9,12 @@ import { DashboardOutlined,
           ApartmentOutlined, 
           FolderOutlined,
           BuildOutlined, 
-          ToolOutlined,
           OrderedListOutlined,
           UserOutlined,
           UnorderedListOutlined,
           ProfileFilled,
           FolderOpenOutlined, 
-          PercentageOutlined,
-          BuildFilled,
-         SlidersFilled } from '@ant-design/icons'
+          SlidersFilled } from '@ant-design/icons'
 
 //Build
 
@@ -46,80 +43,64 @@ const { Header, Content, Sider } = Layout
 const Home = () =>{
         return(
           <BrowserRouter>
-            <Layout style={{ minHeight: '100vh' }}>            
-            <Sider style={{padding:'10px'}} width={'300px'}>
+            <Layout style={styles.layouts.principal}>            
+            <Sider style={styles.sider} width={'300px'}>
               <div>
-                <Typography.Title style={{color:'white', textAlign:'left'}}>
-                  ERP / <span style={{fontSize:'25px'}}>Smart Hydro</span>
+                <Typography.Title style={styles.title}>
+                  ERP / <span style={styles.title.span}>Smart Hydro</span>
                 </Typography.Title>
               </div>
              <hr /> 
-              <Menu theme="dark" mode="inline" style={{textAlign:'left',marginTop:'20px'}} 
-              
-              defaultOpenKeys={['2', '3', '4']}
-              >
-                <Menu.Item key="1" >
+              <Menu theme="dark" mode="inline" style={styles.menu} 
+                defaultOpenKeys={['2', '3', '4']} >
+                <Menu.Item key="1" icon={<DashboardOutlined />} >
                     <Link to="/">
-                    <DashboardOutlined style={{marginRight:'10px'}}/>
                      Dashboard
                      </Link>
                 </Menu.Item>
                 <Menu.SubMenu  key="2" title={<><FolderOpenOutlined /> Clientes</>} >
-                      <Menu.Item key="22">
+                      <Menu.Item key="22" icon={<BuildOutlined />}>
                         <Link to="/enterprises">
-                          <BuildOutlined />
                            Empresas 
                         </Link>                        
                       </Menu.Item>
-                      <Menu.Item key="23">
-                        <Link to="/clients">
-                          <UserOutlined />
+                      <Menu.Item key="23" icon={<UserOutlined />}>
+                        <Link to="/clients" >
                           Personas
                         </Link>
-                        
                       </Menu.Item>
-                      
-                      
-                                      </Menu.SubMenu>
+                </Menu.SubMenu>
                 <Menu.SubMenu key="3" title={<><ProfileFilled /> Levantamientos de pozos</>} >
-                      
-                      <Menu.Item key="13">
+                      <Menu.Item key="13" icon={<UnorderedListOutlined />}>
                       <Link to="/external_lifting">
-                          <UnorderedListOutlined />
                           Levantamientos externos
                         </Link>                 
                       </Menu.Item>
-                      <Menu.Item key="12">
-                      <Link to="/internal_lifting">                          
-                          <OrderedListOutlined />
+                      <Menu.Item key="12" icon={<OrderedListOutlined />}>
+                      <Link to="/internal_lifting" >                          
                            Levantamientos internos
                         </Link>                 
                       </Menu.Item>
-                      
-                                      </Menu.SubMenu>
-<Menu.SubMenu key="4" title={<><FolderOutlined />Proyectos</>} >
-                      <Menu.Item key="8">
-                        <Link to="/projects">
-                          <FolderOpenOutlined/>
+                      </Menu.SubMenu>
+                      <Menu.SubMenu key="4" title={<><FolderOutlined /> Proyectos</>} >
+                      <Menu.Item key="8" icon={<FolderOpenOutlined/>}>
+                        <Link to="/projects" >
                           Gestionar proyectos
                         </Link>                        
                       </Menu.Item>                      
-                      <Menu.Item key="9" >
+                      <Menu.Item key="9" icon={<SlidersFilled />}>
                         <Link to="/config_entry">
-                          <SlidersFilled />
                           Elementos
                         </Link>                        
                       </Menu.Item>
-                      <Menu.Item key="10">
+                      <Menu.Item key="10" icon={<ApartmentOutlined />}>
                         <Link to="/config_deparments">
-                          <ApartmentOutlined />
                           Departamentos
                         </Link>                        
                       </Menu.Item>
                     </Menu.SubMenu>
-                  <Menu.Item key="7">
+                  <Menu.Item key="7" icon={<UnorderedListOutlined />}>
                     <Link to="/actions">
-                        <UnorderedListOutlined />
                         Gestión de Tareas
                       </Link>
                   </Menu.Item>                
@@ -157,6 +138,28 @@ const Home = () =>{
 
                             
         )
+    }
+
+    const styles = {
+      layouts: {
+        principal: {
+          minHeight: '100vh'
+        },
+      },
+      sider: {
+        padding: '10px'
+      },
+      title: {
+        color:'white', 
+        textAlign:'left',
+        span: {
+          fontSize:'25px'
+        }
+      },
+      menu: {
+        textAlign:'left',
+        marginTop:'20px'
+      }
     }
 
 

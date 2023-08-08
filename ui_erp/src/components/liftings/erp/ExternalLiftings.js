@@ -4,9 +4,9 @@ import { Table, Button, Modal, Select,
           Tooltip, Card, Descriptions,
           Row, Col, Collapse, notification } from 'antd'
 import ResolutionForm from './ResolutionForm'
-import { UserOutlined, CloudDownloadOutlined, EyeFilled, FileImageFilled } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { UserOutlined, EyeFilled, FileImageFilled } from '@ant-design/icons'
 import { BASE_URL_IMG } from '../../../api/api'
+import ModalWells from './ModalWells'
 
 const { Option } = Select
 const ExternalLiftings = () => {
@@ -57,19 +57,21 @@ const ExternalLiftings = () => {
     
     function modalDataWells(wells) {
       Modal.info({
-        width: '100%',  
-        icon:<></>,    
-        style: {top:0},
+        width: 1200,  
+        style: {top:5},
+        icon:<></>,
         okText:'Volver',  
-        content: <Row justify='center' align='middle'>
+        content: 
+        
+        <Row justify={'center'}>
           {wells.map((x)=> {
-            return(<>
-            <Col span={12} style={{padding:'5px'}}>
-                <Card width={'700px'} bordered hoverable title={x.name} style={{border:'1px solid black', borderRadius:'10px'}}>
-                <Collapse defaultActiveKey={'2'} style={{borderRadius:'10px'}}>
+            return(
+            <Col span={12}>                
+              <Card width={'400px'} bordered hoverable title={x.name} style={{border:'1px solid black', borderRadius:'10px'}}>
+                <Collapse defaultActiveKey={[wells.length>1?'2':'3']} style={{borderRadius:'10px'}}>
                   <Collapse.Panel key='1' header='Datos generales'>
                     <Descriptions size='small' bordered>
-                    <Descriptions.Item span={4} label={<>Tipo captación</>}>
+                    <Descriptions.Item span={3} label={<>Tipo captación</>}>
                     {x.pickup_type}
                   </Descriptions.Item>
                   <Descriptions.Item span={3} label={<>Dirección</>}>
@@ -127,9 +129,7 @@ const ExternalLiftings = () => {
                     <ResolutionForm well={x.id} />
                   </Collapse.Panel>
                 </Collapse>
-               
-                
-              </Card></Col></>)
+              </Card></Col>)
           })}
         </Row>
       })
@@ -184,14 +184,7 @@ const ExternalLiftings = () => {
             title: 'Pozos',
             render: (x) => <>
             {x.external_client.name_enterprise && <>
-              <Button 
-                type='primary'
-                ghost
-                block
-                icon={<EyeFilled />}
-                onClick={()=> modalDataWells(x.wells)}>
-                 {x.wells.length} {x.wells.length === 1 ? 'Pozo':'Pozos'}
-              </Button></>}
+              <ModalWells wells={x.wells} /></>}
             </>
           },
           {

@@ -4,17 +4,17 @@ import { SaveOutlined, ClearOutlined } from '@ant-design/icons'
 import api from '../../api/endpoints'
 const { Title } = Typography
 
-const FormDeparment = () => {
+const FormDeparment = ({count, setCount}) => {
 
     const [form] = Form.useForm()
 
     const onFinish = async(values) => {
         const rq = await api.projects.company_deparments.create(values).then((r)=> {
             notification.success({message: 'DEPARTAMENTO CREADO'})
+            setCount(count+1)
             form.resetFields()
         })
     }
-
 
 
     return(<Row>

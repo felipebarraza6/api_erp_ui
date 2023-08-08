@@ -79,10 +79,9 @@ const FormElement = ({ count, setCount, selectElement, setSelectElement }) => {
         <Form.Item label='Departamento' name='deparment' rules={[{required:true, message:'Selecciona una opcion...'}]}>
             <Select placeholder='Debes seleccionar un departamento'>
                 {deparments.map((deparment)=><Option value={deparment.id}>{deparment.name}</Option>)}
-                <Option value='GLOBAL'>GLOBAL</Option>
             </Select>
         </Form.Item>  
-        <Form.Item label='Posicion' name='position'>
+        <Form.Item label='Posicion' rules={[{required:true, message:'Ingresa su posición'}]} name='position'>
           <Input type='number' /> 
         </Form.Item>
         <Form.Item>

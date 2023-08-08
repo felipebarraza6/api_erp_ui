@@ -53,6 +53,8 @@ class ResolutionInfo(ModelApi):
     term_installation_measurement = models.DateField(blank=True, null=True)
     initial_transmission_term = models.DateField(blank=True, null=True)
     dga_standard = models.CharField(max_length=1200, blank=True, null=True)
+    date_monitoring = models.DateField(blank=True, null=True)
+    date_initial = models.DateField(blank=True, null=True) 
     
 
     def __str__(self):

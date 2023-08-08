@@ -17,19 +17,33 @@ const FormUpload = ({ properties, element, count, setCount, countA, setCountA })
     const [form] = Form.useForm()
     const {state} = useContext(AuthContext)
 
+    const props = {
+        onRemove: (file) => {
+         form.setFieldValue({
+            file: file
+         }) 
+        },
+        beforeUpload: (file) => {   
+          form.setFieldValue({
+            file: file
+         }) 
+          return false
+        },        
+    }
+
     const onFinish = async(values) => {
       setLoading(true)
       values = {
         ...values, 
-        file: values.file.file.originFileObj,
+        file: values.file.file,
         type_element: element.id,
+        code: values.code ? values.code:'',
         user: state.user.id,
         project: location.pathname.slice(10)
       }
 
       var list=[]
       Object.entries(values).forEach(([key, value]) => {
-        
         list.push({'key':key, 'value':value})
       })
       
@@ -50,21 +64,22 @@ const FormUpload = ({ properties, element, count, setCount, countA, setCountA })
         }}
     >Formulario de carga</Title>
     <Form.Item name='name' rules={[{required: true, message: 'Debes ingresar el nombre'}]}>
-      <Input placeholder="nombre archivo" />
+      <Input prefix="Nombre: " />
     </Form.Item>
     <Form.Item name='note'>
       <TextArea placeholder="agregar nota" rows={3}  />
     </Form.Item>
-    <Form.Item name='code' rules={[{required: true, message: 'Debes ingresar el codigo'}]}>
-      <Input placeholder="codigo archivo" />
+    <Form.Item name='code'>
+      <Input prefix="Código archivo: " />
     </Form.Item>
     <Form.Item name='file' rules={[{required: true, message: 'Debes seleccionar tu archivo'}]}>
       <Upload
+        {...props}
         name="avatar"
         listType="picture-card"
         className="avatar-uploader"
-        showUploadList={false}
-      >
+        maxCount={1}
+        showUploadList={true}>
         Seleccionar archivo
       </Upload>
     </Form.Item>
@@ -78,11 +93,10 @@ const FormUpload = ({ properties, element, count, setCount, countA, setCountA })
         size="small"
         htmlType='submit'
         icon={<UploadOutlined />}
-        style={{backgroundColor: properties && properties.color, borderColor: properties && properties.color}}
-      >
+        style={{ marginRight: '10px' }}>
         Subir archivo
       </Button>
-      <Button style={{borderColor:properties&&properties.color,borderRadius:'0px',color:properties&&properties.color}} size='small' onClick={()=>form.resetFields()}>Limpiar</Button>
+      <Button  size='small' onClick={()=>form.resetFields()}>Limpiar</Button>
     </Form.Item>
   </Form>)
 }

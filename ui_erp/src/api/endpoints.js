@@ -346,6 +346,16 @@ const list_liftings_external = async() => {
     return rq
 }
 
+const list_general =async(client_id) => {
+    const rq = await GET_NOTTOKEN(`liftings/?client=${client_id}`)
+    return rq
+}
+
+const retrieve_lifting =async(uuid) => {
+    const rq = await GET_NOTTOKEN(`liftings/${uuid}`)
+    return rq
+}
+
 const list_liftings_internal = async() => {
     const rq = await GET('liftings/?is_external=false')
     return rq
@@ -495,6 +505,8 @@ const api = {
         delete: delete_workload
     },
     liftings: {
+        list_general: list_general,
+        retrieve: retrieve_lifting,
         list_external: list_liftings_external,
         list_internal: list_liftings_internal,
         create: create_lifting,

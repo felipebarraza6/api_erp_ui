@@ -74,7 +74,7 @@ const WellForm = ({init}) => {
     const setModalView = (values) => {
         
         Modal.confirm({
-            title:'Estas correcta la información ingresada del pozo?',
+            title:'Estás correcta la información ingresada del pozo?',
             okText: init ? 'Si, actualizar información':'Si, subir información',
             cancelText: 'No, continuar editando',   
             width:'600px',                     
@@ -197,7 +197,7 @@ const WellForm = ({init}) => {
                 <Item label={'Profunfidad instalación bomba'} style={styles.inputWell} name='pupm_depth' rules={[{required:true, message:'Campo boligatorio'}]}>
                     <Input type='number' onChange={(value)=>setWellDraft('pupm_depth', value)} prefix={<Tag color='blue' style={styles.tag}>2</Tag>} suffix={<><Tag color='blue' style={styles.tag}>Mt</Tag></>} placeholder='METROS' style={styles.input} />
                 </Item>
-                <Item label={'Describe interior pozo'} style={styles.inputWell} name='inside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
+                <Item label={'Diámetro interior pozo'} style={styles.inputWell} name='inside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>
                     <Input type='number' onChange={(value)=>setWellDraft('inside_diameter', value)} prefix={<Tag color='blue' style={styles.tag}>3</Tag>} suffix={<><Tag color='blue' style={styles.tag}>MM/PULG</Tag></>} placeholder='MILIMETROS/PULGADAS' style={styles.input} />
                 </Item>                            
                 <Item label={'Diámetro ducto salida bomba'} style={styles.inputWell} name='outside_diameter' rules={[{required:true, message:'Campo boligatorio'}]}>

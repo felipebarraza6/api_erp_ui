@@ -1,6 +1,6 @@
 import React, {useReducer, useEffect, useState } from 'react'
 
-import {Button, Spin, Tooltip, Modal, Table, Tag, notification, Drawer, Row, Col, Divider } from 'antd'
+import {Button, Spin, Menu, Tooltip, Modal, Table, Tag, notification, Drawer, Row, Col, Divider } from 'antd'
 import {BorderlessTableOutlined, UserOutlined, ReloadOutlined, StopOutlined} from '@ant-design/icons'
 
 import { reducer } from '../../reducers/profile.js'
@@ -172,7 +172,7 @@ export const Profile = () =>{
             {!state.loading &&
                 <Drawer
                     width='400px'
-                    visible={profile.visible}
+                    open={profile.visible}
                     onClose={closeProfile}
                     closable={false}
                     title={<><UserOutlined/> {state.data.data.user.email}</>}
@@ -195,25 +195,34 @@ export const Profile = () =>{
 
                 </Drawer>
             }
-
+            <Menu.Item key={'1'} style={styles.menuItem}>
             <Tooltip title="Actualizar datos">
                 <Button onClick={updateTasks} style={{ marginRight:'20px'}} type="link" >
                     <ReloadOutlined />
                 </Button>
             </Tooltip>
-
+            </Menu.Item>
+            <Menu.Item key={'2'} style={styles.menuItem}>
             <Button onClick={ModalTask} type='primary' style={{marginRight:'15px'}}>
                 <BorderlessTableOutlined style={{marginRight:'3px'}} />
                 {state.loading ? <Spin/>: state.data.data.actions.length}
                 <i style={{paddingLeft:'15px'}}>Tareas Pendientes</i>
             </Button>
-
+            </Menu.Item>
+            <Menu.Item key={'3'} style={styles.menuItem}>
             <Button onClick={Profile} type='link' style={{color:'white'}}>
+            
             <UserOutlined style={{fontSize:'20px', paddingRight:'5px'}} />
             {state.loading ? <Spin/>: state.data.data.user.email }
-            </Button>
+            </Button></Menu.Item>
         </React.Fragment>
     )
+}
+
+const styles = {
+    menuItem: {
+        backgroundColor: '#001529'
+    }
 }
 
 export default Profile

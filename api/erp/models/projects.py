@@ -2,8 +2,7 @@ from .clients import Client
 from .users import User
 from django.db import models
 from .utils import ModelApi
-from .liftings import Well
-
+from .liftings import Well, Lifting
 
 
 class Project(ModelApi):
@@ -11,6 +10,7 @@ class Project(ModelApi):
 	service = models.CharField(max_length=600, blank=True, null=True)
 	code_internal = models.CharField(max_length=200, blank=True, null=True)
 	description = models.TextField(max_length=1200, blank=True, null=True)
+	lifting = models.ForeignKey(Lifting, blank=True, null=True, on_delete=models.CASCADE)
 
 	def __str__(self):
 		return str(self.id)

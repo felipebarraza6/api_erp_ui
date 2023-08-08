@@ -12,12 +12,8 @@ import Lifting from './containers/Lifting.js'
 import { useLocation, Route, Switch } from 'react-router-dom'
 import { Card } from 'antd'
 
-
-
 // Create Contexts
 export const AuthContext = React.createContext()
-
-
 
 const initialState = {
   isAuthenticated: false,  
@@ -28,9 +24,6 @@ const initialState = {
 function App(){
 
   let location = useLocation()
-  
-  
-  
   const [state, dispatch] = React.useReducer(login_reducer, initialState)
   
   React.useEffect(() => {
@@ -53,14 +46,13 @@ function App(){
 
   const RenderLifting = () => {
     return(<>
-      
       <Switch>
-      <Route exact path="/liftings/external" component={()=><Lifting is_external={true} />} />
-      <Route exact path="/liftings/internal" component={()=><Lifting is_external={false} />} />
-      <Route path="*" component={()=><Card style={{margin:'20px'}}><NotFound is_external={true} /></Card>} />
-      
+        <Route exact path="/liftings/external" component={()=><Lifting is_external={true} />} />
+        <Route exact path="/liftings/internal" component={()=><Lifting is_external={false} />} />
+        <Route path="*" component={()=><Card style={{margin:'20px'}}>
+            <NotFound is_external={true} />
+          </Card>} />
       </Switch>
-      
       </>)
   }
 
