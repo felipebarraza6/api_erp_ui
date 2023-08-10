@@ -1,17 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
-import { Modal, Form, Input, Select, Alert } from 'antd'
-
+import { Modal, Form, Input, Select, Alert, Button, notification } from 'antd'
+import api from '../../api/endpoints'
 const { Option } = Select
 
 const ModalForm = ({visible, onCreate, onCancel, enterprise, error }) => {
 
     const [form] = Form.useForm()
+    const [listPersons, setListPersons] = useState([])
+    const [newCharget, setNewCharge] = useState(null)
+    const [count, setCount] = useState(0)
 
     const [other, setOther] = useState({
       other_charge:false
     })
-   
+    
+    const getData = async() => {
+      const rq = await api.worklands.list().then((r)=> {
+        setListPersons(r.data.results)
+      })
+    }
+
+    useEffect(()=> {
+      getData()
+    }, [count])
+
     return(
       <React.Fragment>
         <Modal
@@ -55,25 +68,37 @@ const ModalForm = ({visible, onCreate, onCancel, enterprise, error }) => {
                   message:'Porfavor ingresa el cargo'
                 }
               ]}>
-                {other.other_charge ? 
-                  <Input placeholder="Escribe el cargo" />:
-                  <Select name="charge" placeholder="Selecciona un cargo" onSelect={(value)=> {
-                    if(value==='Otro Cargo'){
+                {other.other_charge ? <>
+                  <Input onChange={(e)=>setNewCharge(e.target.value)} placeholder="Escribe el cargo" />
+                  <Button onClick={async()=>{
+                      const rq = api.worklands.create({name:newCharget}).then((r)=>{
+                        notification.success({message:'CARGO CREADO CORRECTAMENTE'})
+                        setOther(false)
+                        setCount(count+1)                        
+                        form.setFieldsValue({'charge':newCharget})
+                      }
+                      )
+                  }} size='small' style={{marginTop:'10px'}} type='primary' icon={'+'}>Crear cargo</Button>
+                  </>:
+                  <Select placeholder="Selecciona un cargo" onSelect={(value)=> {
+                    if(value===''){
                       setOther({
                         other_charge:true                        
                       })
                       value = null
                     }
-                  }} >                
-                      <Option value="Gerente General">Gerente General</Option>
-                      <Option value="Gerente de Operaciones">Gerente de Operaciones</Option>
-                      <Option value="Jefe de Operaciones">Jefe de Operaciones</Option>
-                      <Option value="Jefe de Planta">Jefe de Planta</Option>
-                      <Option value="Jefe de Mantención">Jefe de Mantención</Option>
-                      <Option value="Secretaria General">Secretaria General</Option>
-                      <Option value="Secretaria administrativa">Secretaria administrativa</Option>
-                      <Option value="Secretaria Gerencia">Secretaria Gerencia</Option>
-                      <Option value="Otro Cargo">Otro</Option>
+                  }} >
+                    {listPersons.map((p)=> <>
+                      <Option value={p.name}>
+                        {p.name} <Button style={{float:'right', marginTop:'2px'}} type='primary' danger size='small' onClick={async()=>{
+                            const rq = await api.worklands.delete(p.id).then((r)=>{
+                              notification.success({message:'CARGO ELIMINAD'})
+                              form.setFieldsValue({'charge':''})
+                              setCount(count+1)
+                            })
+                        }}>Eliminar</Button>
+                        </Option></>)}                                                         
+                    <Option value={''}>Crear un nuevo cargo</Option>
                   </Select>
                 }
                 

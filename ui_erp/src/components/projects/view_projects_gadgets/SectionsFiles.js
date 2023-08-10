@@ -11,7 +11,6 @@ const SectionFiles = ({ elements }) => {
     
     return(<>
         {elements && 
-            
             elements.map((element)=> {
                 return(<SingleElement element={element} />)
             })

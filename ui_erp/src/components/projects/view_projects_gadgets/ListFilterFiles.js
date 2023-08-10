@@ -24,7 +24,7 @@ const ListFilterFiles = ({ properties, element, count, setCount, countA, setCoun
 
     var str_day = date.toLocaleDateString('es-ES', opciones_dia);
     //Freitag, 2. Juli 2021
-    var return_str = `${str_day.slice(0,3).toUpperCase()} ${date.getDate()}-${date.getMonth()+1>9?`${date.getMonth()+1}`:`0${date.getMonth()+1}`}-${date.getFullYear()}`
+    var return_str = `${str_day.slice(0,3).toUpperCase()} ${date.getDate()+1} -${date.getMonth()+1>9?`${date.getMonth()+1}`:`0${date.getMonth()+1}`}-${date.getFullYear()}`
    return return_str
   }
 

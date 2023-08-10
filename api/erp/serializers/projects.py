@@ -23,7 +23,7 @@ class CompanyDeparmenRetrievetModelSerializer(serializers.ModelSerializer):
     elements = serializers.SerializerMethodField('get_elements')
     
     def get_elements(self, deparment):
-        qs = TypeElement.objects.filter(deparment=deparment.id)
+        qs = TypeElement.objects.filter(deparment=deparment.id).order_by('-position')
         serializer = TypeElementModelSerializer(instance=qs, many=True)
         data = serializer.data
         return data

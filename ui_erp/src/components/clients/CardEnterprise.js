@@ -41,10 +41,6 @@ const CardEnterprise = (attr) =>{
                 title={attr.data.name}                
                 style={{marginBottom:'0px'}}
                 />            
-                <div style={{marginTop:'10px', float:'right'}}>
-                    <Tag color="processing">{attr.data.type_client}</Tag>
-                </div>
-                
         </Card>
         </>
     )
