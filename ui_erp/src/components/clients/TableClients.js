@@ -50,10 +50,10 @@ const TableClients = (attr) =>{
     const expandedRowRender = (person) => {
         return(
             <Descriptions layout="vertical">                
-                <Descriptions.Item label="Telefono">{person.phone_number ? person.phone_number : 'S/D'}</Descriptions.Item>
-                <Descriptions.Item label="Cargo">{person.charge ? person.charge : 'S/D'}</Descriptions.Item>
-                <Descriptions.Item label="Empresa">{person.enterprise ? person.enterprise : 'S/D'}</Descriptions.Item>
-                <Descriptions.Item span={3} label="Email">{person.email ? person.email : 'S/D'}</Descriptions.Item>                
+                <Descriptions.Item span={3} label={<b>Empresa</b>}>{person.enterprise ? person.enterprise : 'S/D'}</Descriptions.Item>
+                <Descriptions.Item span={3} label={<b>Cargo</b>}>{person.charge ? person.charge : 'S/D'}</Descriptions.Item>
+                <Descriptions.Item span={3} label={<b>Telefono</b>}>{person.phone_number ? person.phone_number : 'S/D'}</Descriptions.Item>                                
+                <Descriptions.Item span={3} label={<b>Email</b>}>{person.email ? person.email : 'S/D'}</Descriptions.Item>                
             </Descriptions>
         )
     }
@@ -70,7 +70,7 @@ const TableClients = (attr) =>{
                 {attr.enterprise ? 
                     <Text mark >{attr.enterprise.name} ({attr.quantity})</Text> : <Text mark>TODOS({attr.quantity})</Text>
                 } 
-                <Button type="primary" onClick={() => getPersons(attr.dispatch, 1, '')} style={{float: 'right'}}>TODOS</Button>                
+                <Button type="primary" size={'small'} onClick={() => getPersons(attr.dispatch, 1, '')} style={{float: 'right', marginTop:'15px'}}>TODOS</Button>                
             </React.Fragment>
             }
         pagination={{            
