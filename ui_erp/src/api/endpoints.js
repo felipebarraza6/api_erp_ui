@@ -346,6 +346,11 @@ const list_liftings_external = async() => {
     return rq
 }
 
+const deleteLifting = async(id) => {
+    const rq = await DELETE(`liftings/${id}/`)
+    return rq
+}
+
 const list_general =async(client_id) => {
     const rq = await GET_NOTTOKEN(`liftings/?client=${client_id}`)
     return rq
@@ -511,6 +516,7 @@ const api = {
         list_internal: list_liftings_internal,
         create: create_lifting,
         update: update_lifting,
+        delete: deleteLifting,
         wells:{
             create: create_well,
             photo: create_photo,

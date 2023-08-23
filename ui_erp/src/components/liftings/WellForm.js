@@ -219,7 +219,7 @@ const WellForm = ({init}) => {
                         <Option value={false}>NO</Option>
                     </Select>
                 </Item>
-                <Item style={styles.inputWell} name='is_feasibility_electrical'>
+                <Item style={styles.inputWell} label='Factibilidad eléctrica' name='is_feasibility_electrical' rules={[{required:true, message:'Selecciona una opción'}]}>
                     <Select placeholder=' ¿Cuenta con factibilidad eléctrica 220v?' style={styles.input} dropdownStyle={styles.input}>
                         <Option value={true}>SI</Option>
                         <Option value={false}>NO</Option>

@@ -13,7 +13,7 @@ const UpdateFile = ({ properties, file, count, setCount }) => {
       .then((r) => {
         setCount(count + 1);
         notification.success({ message: "Campos actualizados!" });
-        form.resetFields();
+    
         setVisible(false);
       });
   };
@@ -30,7 +30,7 @@ const UpdateFile = ({ properties, file, count, setCount }) => {
   return (
     <>
       <Modal
-        visible={visible}
+        open={visible}
         onCancel={() => setVisible(false)}
         footer={[]}
         title={file.name}
@@ -50,7 +50,7 @@ const UpdateFile = ({ properties, file, count, setCount }) => {
           <Form.Item name={"code"}>
             <Input placeholder="Codigo archivo" />
           </Form.Item>
-          <Form.Item name={"note"}>
+          <Form.Item name={"value_input"}>
             <Input.TextArea placeholder="Ingresa una nota..." />
           </Form.Item>
           <Form.Item>

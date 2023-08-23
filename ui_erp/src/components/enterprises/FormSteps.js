@@ -178,11 +178,11 @@ const FormSteps = (attr) =>{
                     {attr.loading ? <Spin />:
                     <>                    
                          <Form.Item name="name" rules={[{ required: true, message: 'Ingresa el nombre de la empresa'}]}>
-                            <Input name="name" maxLength={20}  prefix={<BuildOutlined/>} type="text" placeholder={'Nombre'}  />
+                            <Input name="name" maxLength={1200}  prefix={<BuildOutlined/>} type="text" placeholder={'Nombre'}  />
                         </Form.Item>
                         
                         <Form.Item name="rut" >
-                            <Input name="rut" maxLength={10}  prefix={<IdcardOutlined/>} type="text" placeholder={'Rut'}  />
+                            <Input name="rut" maxLength={20}  prefix={<IdcardOutlined/>} type="text" placeholder={'Rut'}  />
                         </Form.Item>
                                             
                         

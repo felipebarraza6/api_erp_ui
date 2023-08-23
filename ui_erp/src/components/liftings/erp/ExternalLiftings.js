@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import api from '../../../api/endpoints'
 import { Table, Button, Modal, Select,
-          Tooltip, Card, Descriptions,
+          Tooltip, Card, Descriptions, Popconfirm,
           Row, Col, Collapse, notification } from 'antd'
 import ResolutionForm from './ResolutionForm'
 import { UserOutlined, EyeFilled, FileImageFilled } from '@ant-design/icons'
@@ -206,6 +206,16 @@ const ExternalLiftings = () => {
               {enterprises.map((enterprise)=><Option value={enterprise.id}>{enterprise.name}</Option>)}
             </Select>            
             </>
+          }, 
+          {
+            render: (lifting)=> <Popconfirm onConfirm={async()=> {
+              const rq = await api.liftings.delete(lifting.uuid).then((r)=> {
+                notification.success({message:'Levantamiento eliminado correctamente!'})
+                setCount(count+1)
+              })
+            }} title='Estas seguro de eliminar este levantamiento?'>
+              <Button type='primary' danger>Eliminar</Button>
+              </Popconfirm>
           }                          
         ]}
         dataSource={list}></Table></>)

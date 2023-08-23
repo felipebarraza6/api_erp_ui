@@ -54,8 +54,8 @@ const ListFilterFiles = ({ properties, element, count, setCount, countA, setCoun
                 <Tag color='blue'>{file.user.email}</Tag> 
                 
                 <Paragraph style={{ marginTop: "20px" }}>
-                {file.note !== 'undefined' ?
-                  <>{file.note}</>:''}
+                {file.value_input ?
+                  <Paragraph style={{border:'1px solid #1677ff', borderRadius:'10px', padding:'5px'}}>{file.value_input}</Paragraph>:''}
                 </Paragraph>
                 <Row justify="center">
                   <Col span={24}>                    

@@ -66,7 +66,7 @@ const FormUpload = ({ properties, element, count, setCount, countA, setCountA })
     <Form.Item name='name' rules={[{required: true, message: 'Debes ingresar el nombre'}]}>
       <Input prefix="Nombre: " />
     </Form.Item>
-    <Form.Item name='note'>
+    <Form.Item name='value_input'>
       <TextArea placeholder="agregar nota" rows={3}  />
     </Form.Item>
     <Form.Item name='code'>
