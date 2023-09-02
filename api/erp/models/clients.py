@@ -39,7 +39,7 @@ class Client(ModelApi):
 		regex=r'\+?1?\d{9,15}$',
 		message="El número de telefono debe ingresarse en el formato: +9999999. Se permiten hasta 15 dígitos."
 	)
-
+	#id_api_
 	type_client = models.CharField(max_length=40, blank=True, null=True)
 	name = models.CharField(max_length=200, null = False, blank= False)
 	rut = models.CharField(max_length=10, null=True, blank=True)

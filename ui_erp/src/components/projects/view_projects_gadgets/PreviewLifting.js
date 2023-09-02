@@ -17,9 +17,14 @@ const PreviewLifting = ({ uuid }) => {
         getData(uuid)
     }, [uuid])
 
-    function ViewClient(client) {
+    function ViewClient(lifting) {
+
+        var external_client = lifting.external_client
+        var client = lifting.client
+
+
         return(<Descriptions size='small' bordered layout='vertical' style={{marginTop:'10px', marginBottom:'10px'}}>
-                    <Descriptions.Item label='Nombre contacto' span={3}>
+          {external_client ? <><Descriptions.Item label='Nombre contacto' span={3}>
                       <b>{client.name_contact}</b>
                     </Descriptions.Item>            
                     <Descriptions.Item label='Teléfono' span={3}>
@@ -36,14 +41,14 @@ const PreviewLifting = ({ uuid }) => {
                     </Descriptions.Item>
                     <Descriptions.Item label='Dirección empresa' span={3}>
                       <b>{client.address_enterprise}</b>
-                    </Descriptions.Item>                  
+                    </Descriptions.Item></>:''}
             </Descriptions>)
         
       }
 
     return(<Row style={{marginTop:'-90px'}}>
         <Col style={styles.col} span={24}>{lifting && <Card hoverable>                        
-            {ViewClient(lifting.external_client)}            
+            {ViewClient(lifting)}
             <ModalWells wells={lifting.wells} /><br/><br/>
             FECHA CREACIÓN: <b>{lifting.created.slice(0,10)}</b><br/>
             ÚLTIMA ACTUALIZACIÓN: <b>{lifting.modified.slice(0,10)}</b>            

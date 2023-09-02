@@ -47,8 +47,10 @@ const ListLiftingsForClient = ({id_client, dataProject, count, setCount}) => {
             
            <Select defaultValue={dataProject.lifting?selectUuid:null} onSelect={(x)=>setUuid(x)} style={{width:'100%'}} placeholder='Selecciona un levantamiento'>
                 {listLiftings.map((e)=> {
-                console.log(e)
-                 return(<Select.Option value={e.uuid} >FECHA: <b>{e.created.slice(0,10)}</b> / CONTACTO: <b>{e.external_client.name_contact.toUpperCase()}</b></Select.Option>)
+
+                 return(<Select.Option value={e.uuid} >
+                            FECHA: <b>{e.created.slice(0,10)}</b> <b>{e.external_client ? `/ CONTACTO: ${e.external_client.name_contact.toUpperCase()}`:`/ CLIENTE: ${e.client.name}`}</b>
+                 </Select.Option>)
                 }
                 )}                
             </Select>

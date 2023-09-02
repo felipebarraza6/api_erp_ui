@@ -13,7 +13,8 @@ import { DashboardOutlined,
           UserOutlined,
           UnorderedListOutlined,
           ProfileFilled,
-          FolderOpenOutlined, 
+          FolderOpenOutlined,
+          BarChartOutlined,
           SlidersFilled } from '@ant-design/icons'
 
 //Build
@@ -32,6 +33,7 @@ import ViewProject from '../components/projects/ViewProject'
 import ExternalLiftings from '../components/liftings/erp/ExternalLiftings'
 import InternalLifftings from '../components/liftings/erp/InternalLiftings'
 import Departaments from '../components/departaments/Departaments'
+import Telemetry from '../components/telemetry/Home'
 
 
 // React Router
@@ -53,11 +55,17 @@ const Home = () =>{
              <hr /> 
               <Menu theme="dark" mode="inline" style={styles.menu} 
                 defaultOpenKeys={['2', '3', '4']} >
+                <Menu.Item key="200" icon={<BarChartOutlined />} >
+                    <Link to="/telemetry">
+                     Telemetría
+                     </Link>
+                </Menu.Item>
                 <Menu.Item key="1" icon={<DashboardOutlined />} >
                     <Link to="/">
                      Dashboard
                      </Link>
                 </Menu.Item>
+
                 <Menu.SubMenu  key="2" title={<><FolderOpenOutlined /> Clientes</>} >
                       <Menu.Item key="22" icon={<BuildOutlined />}>
                         <Link to="/enterprises">
@@ -115,7 +123,9 @@ const Home = () =>{
               <Content>
                 
                 <div style={{ padding: 24, minHeight: 360, textAlign:'left' }}>
-                  <Switch>                
+                  <Switch>
+
+                    <Route exact path='/telemetry' component={Telemetry} />
                     <Route exact path='/' component={Dashboard} />
                     <Route exact path='/enterprises' component={Enterprises} />
                     <Route exact path='/clients' component={Clients} />

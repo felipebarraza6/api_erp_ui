@@ -23,6 +23,7 @@ class Well(ModelApi):
     latitude = models.CharField(max_length=2000, blank=True, null=True)
     longitude = models.CharField(max_length=2000, blank=True, null=True)    
     flow_granted_dga = models.FloatField(blank=True, null=True)
+    id_sh_api = models.CharField(max_length=300, blank=True, null=True)
     depth = models.FloatField(blank=True, null=True)
     pupm_depth = models.FloatField(blank=True, null=True)
     static_level = models.FloatField(blank=True, null=True)
