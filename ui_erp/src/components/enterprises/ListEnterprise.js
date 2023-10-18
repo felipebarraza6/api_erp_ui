@@ -1,6 +1,16 @@
 import React from "react";
 
-import { Table, Button, Tooltip } from "antd";
+import {
+  Table,
+  Button,
+  Tooltip,
+  Row,
+  Col,
+  Tag,
+  Input,
+  Typography,
+  Select,
+} from "antd";
 
 import {
   EditOutlined,
@@ -14,10 +24,12 @@ import {
   deleteEnterprise,
   updateStatusEnterprise,
   getRetrieveEnterprise,
-  createPerson
+  createPerson,
 } from "../../actions/enterprises";
 
 import ModalEnterprise from "../../components/clients/ModalEnterprise";
+
+const { Paragraph } = Typography;
 
 const ListClients = (enterprises) => {
   const columns = [
@@ -29,14 +41,17 @@ const ListClients = (enterprises) => {
     {
       title: "Empresa",
       render: (item) => (
-        <Tooltip title="Ver Perfil">
+        <Tooltip title={item.name.length > 15 ? `${item.name}` : `Ver Perfil`}>
           <Button
+            size="small"
             onClick={() => {
-              ModalEnterprise(item)
+              ModalEnterprise(item);
             }}
             type="primary"
           >
-            {item.name}
+            {item.name.length > 20
+              ? `${item.name.slice(0, 20)}...`
+              : `${item.name.slice(0, 20)}`}
           </Button>
         </Tooltip>
       ),
@@ -51,17 +66,7 @@ const ListClients = (enterprises) => {
               }
               type="link"
             >
-              <EditOutlined style={{ fontSize: "20px" }} />
-            </Button>
-          </Tooltip>
-          <Tooltip title="Crear persona">
-            <Button
-              onClick={() =>
-               createPerson(item) 
-              }
-              type="link"
-            >
-              <UserAddOutlined style={{ fontSize: "20px" }} />
+              <EditOutlined style={{ fontSize: "15px" }} />
             </Button>
           </Tooltip>
 
@@ -70,7 +75,7 @@ const ListClients = (enterprises) => {
               onClick={() => deleteEnterprise(enterprises.dispatch, item.id)}
               type="link"
             >
-              <DeleteOutlined style={{ color: "red", fontSize: "20px" }} />
+              <DeleteOutlined style={{ color: "red", fontSize: "15px" }} />
             </Button>
           </Tooltip>
           {!item.is_active ? (
@@ -85,7 +90,7 @@ const ListClients = (enterprises) => {
               >
                 <DislikeTwoTone
                   twoToneColor="#eb2f96"
-                  style={{ fontSize: "20px" }}
+                  style={{ fontSize: "15px" }}
                 />
               </Button>
             </Tooltip>
@@ -99,7 +104,7 @@ const ListClients = (enterprises) => {
                 }
                 type="link"
               >
-                <LikeTwoTone style={{ fontSize: "20px" }} />
+                <LikeTwoTone style={{ fontSize: "15px" }} />
               </Button>
             </Tooltip>
           )}
@@ -108,10 +113,70 @@ const ListClients = (enterprises) => {
     },
   ];
 
+  const FiltersTitle = () => {
+    return (
+      <>
+        <Row justify={"space-between"} align={"middle"}>
+          <Col span={24}>
+            <Paragraph style={styles.p}>Buscadores y filtros</Paragraph>
+          </Col>
+          <Col span={12} style={{ marginBottom: "5px" }}>
+            <Input size="small" prefix="Nombre:" style={{ width: "95%" }} />
+          </Col>
+          <Col span={12} style={{ marginBottom: "5px" }}>
+            <Input size="small" prefix="Rut:" style={{ width: "95%" }} />
+          </Col>
+          <Col span={12} style={{ marginBottom: "5px" }}>
+            <Select
+              size="small"
+              style={{ width: "95%" }}
+              showSearch
+              placeholder="Actividad economica"
+            ></Select>
+          </Col>
+          <Col span={12} style={{ marginBottom: "5px" }}>
+            <Input
+              size="small"
+              prefix="Cantidad de pozos:"
+              type="number"
+              style={{ width: "95%" }}
+            />
+          </Col>
+        </Row>
+        <Row justify={"space-around"} align={"middle"}>
+          <Col span={8}>
+            <Select
+              size="small"
+              style={{ width: "95%" }}
+              placeholder="Region"
+            ></Select>
+          </Col>
+          <Col span={8}>
+            <Select
+              size="small"
+              style={{ width: "95%" }}
+              placeholder="Provincia"
+            ></Select>
+          </Col>
+          <Col span={8}>
+            <Select
+              size="small"
+              style={{ width: "95%" }}
+              placeholder="Comuna"
+            ></Select>
+          </Col>
+        </Row>
+      </>
+    );
+  };
+
   return (
     <Table
+      size="small"
+      bordered
       style={{ marginTop: "20px" }}
       dataSource={enterprises.data}
+      title={FiltersTitle}
       pagination={{
         simple: true,
         total: enterprises.quantity,
@@ -126,5 +191,10 @@ const ListClients = (enterprises) => {
   );
 };
 
-export default ListClients;
+const styles = {
+  p: {
+    fontWeight: "900",
+  },
+};
 
+export default ListClients;

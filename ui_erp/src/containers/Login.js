@@ -1,125 +1,137 @@
 // React
-import React from 'react'
+import React from "react";
 
 // Build
-import logo from '../build/images/logo-white.png'
+import logo from "../build/images/logo-white.png";
 
 // Antd
-import { Form, Input, Button, Checkbox, Spin, message } from 'antd';
+import { Form, Input, Button, Checkbox, Spin, message, Card } from "antd";
 
 // Antd Icons
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 // Context
-import { AuthContext } from '../App'
+import { AuthContext } from "../App";
 
 // Endpoints
-import api  from '../api/endpoints'
-import { useLocation } from 'react-router-dom'
+import api from "../api/endpoints";
+import { useLocation } from "react-router-dom";
 
+export const Login = () => {
+  const location = useLocation();
+  console.log(location.pathname);
+  const { dispatch } = React.useContext(AuthContext);
+  const initialState = {
+    email: "",
+    password: "",
+    isSubmitting: false,
+    errorMessage: null,
+    user: null,
+  };
 
-export const Login = () => {   
-    const location = useLocation()
-    console.log(location.pathname)
-    const { dispatch } = React.useContext(AuthContext)
-    const initialState = {
-        email: "",
-        password: "",        
+  const [data, setData] = React.useState(initialState);
+
+  const handleInputChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    setData({
+      ...data,
+      isSubmitting: true,
+      errorMessage: null,
+    });
+
+    try {
+      const response = await api.user.login(data);
+
+      dispatch({
+        type: "LOGIN",
+        payload: response,
+      });
+      message.success(
+        `Acceso correcto: ${response.user.first_name} ${response.user.last_name}`
+      );
+    } catch (error) {
+      setData({
         isSubmitting: false,
-        errorMessage: null,
-        user:null     
+        errorMessage: error.message || error.statusText,
+      });
+      message.error("Credenciales Incorrectas");
     }
+  };
 
-    const [data, setData] = React.useState(initialState)
-
-    const handleInputChange = e => {        
-        setData({
-            ...data,
-            [e.target.name]: e.target.value            
-        })        
-    }
-
-    const handleFormSubmit = async e => {        
-        setData({
-            ...data,
-            isSubmitting: true,
-            errorMessage: null
-
-        })
-
-        try{
-
-            const response = await api.user.login(data)
-
-            dispatch({
-                type: "LOGIN",
-                payload: response
-            })
-            message.success(`Acceso correcto: ${response.user.first_name} ${response.user.last_name}`)
-            
-            
-        } catch (error){            
-            setData({isSubmitting:false, errorMessage:error.message || error.statusText})
-            message.error('Credenciales Incorrectas')
-            }   
-        }
-
-    return(
-        <div className="general-login">        
-            <div className="login-container">
+  return (
+    <div className="general-login">
+      <div className="login-container">
         <div className="login">
-            <div className="head-login">
-                <img alt='logo' src={logo} />
-                <p style={{color:'white', opacity:'0.4', textAlign:'center'}}>CRM - Gestión de tareas y clientes.</p>
-            </div>            
-        <Form
-            onFinish = { handleFormSubmit }
+          <div className="head-login">
+            <img alt="logo" src={logo} />
+            <p style={{ color: "white", opacity: "0.8", textAlign: "center" }}>
+              ERP - Gestión de recursos y empresariales.
+            </p>
+          </div>
+          <Form
+            onFinish={handleFormSubmit}
             name="normal_login"
             className="login-form"
-            initialValues={{ remember: true }}                       
-        >
+            initialValues={{ remember: true }}
+          >
             <Form.Item
+              name="email"
+              rules={[
+                { required: true, message: "Ingresa tu correo corporativo" },
+              ]}
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon" />}
+                type="email"
+                placeholder="Email"
+                value={data.email}
                 name="email"
-                rules={[{ required: true, message: 'Ingresa tu correo corporativo'}]}
-            >
-                <Input 
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    type="email" 
-                    placeholder="Email" 
-                    value={data.email}
-                    name="email"
-                    onChange={handleInputChange}
-                    
-                />            
+                onChange={handleInputChange}
+              />
             </Form.Item>
             <Form.Item
-                name="password"
-                rules={[{ required: true, message: 'Ingresa tu contraseña!' }]}
+              name="password"
+              rules={[{ required: true, message: "Ingresa tu contraseña!" }]}
             >
-                <Input
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                    type="password"
-                    placeholder="Contraseña"
-                    value={data.password}
-                    name="password"                    
-                    onChange={handleInputChange}
-                />
+              <Input
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Contraseña"
+                value={data.password}
+                name="password"
+                onChange={handleInputChange}
+              />
             </Form.Item>
             <Form.Item>
-                <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox>Recuerda mis datos</Checkbox>
-                </Form.Item>        
+              </Form.Item>
             </Form.Item>
             <Form.Item>
-                {data.isSubmitting ? (<Spin />):(<Button type="primary" htmlType="submit" className="login-form-button">INGRESAR</Button>)}
-             </Form.Item>
-        </Form>
+              {data.isSubmitting ? (
+                <Spin />
+              ) : (
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                >
+                  INGRESAR
+                </Button>
+              )}
+            </Form.Item>
+          </Form>
         </div>
-        <p style={{color:'white'}}>2020 - Quality Net</p>
+        <p style={{ color: "white" }}>Smart Hydro 2023</p>
       </div>
-        </div>
-        
-    )
-}
+    </div>
+  );
+};
 
-export default Login
+export default Login;

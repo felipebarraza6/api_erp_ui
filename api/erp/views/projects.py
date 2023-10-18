@@ -49,7 +49,7 @@ class ProjectViewSet(mixins.CreateModelMixin,
             model = Project
             fields = {
                 'client': ['exact'],
-                'code_internal': ['exact'],   
+                'code_internal': ['icontains', 'exact'],   
                 'created': ['contains', 'gte', 'lte', 'year', 'month', 'day', 'year__range', 'month__range',
                     'day__range', 'date__range', 'hour', 'minute', 'second', 'hour__range', 'minute__range', 'minute__range'],      
             }

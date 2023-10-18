@@ -12,18 +12,18 @@ from rest_framework import generics
 from django_filters import rest_framework as filters
 
 # Permissions
-from rest_framework.permissions import ( 
+from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated
 )
 
 from api.erp.models import ChargeWorkload, ExternalClient, Client, EconomicActivity, Employee
 from api.erp.serializers.clients import (ClientModelSerializer,
-                                        TechnicalInfoSerializer, 
-                                        RetrieveClientModel,
-                                        EconomicActivityModelSerializer,
-                                        ChargeWorkloadModelSerializer,
-                                        ExternalClientModelSerializer)
+                                         TechnicalInfoSerializer,
+                                         RetrieveClientModel,
+                                         EconomicActivityModelSerializer,
+                                         ChargeWorkloadModelSerializer,
+                                         ExternalClientModelSerializer)
 
 
 class ChargeWorkloadViewSet(mixins.CreateModelMixin,
@@ -37,7 +37,18 @@ class ChargeWorkloadViewSet(mixins.CreateModelMixin,
     ordering = ('created', )
     queryset = ChargeWorkload.objects.all()
     serializer_class = ChargeWorkloadModelSerializer
-    
+
+    class ClientFilter(filters.FilterSet):
+
+        class Meta:
+            model = ChargeWorkload
+            fields = {
+
+                'name': ['exact', 'contains', 'icontains'],
+
+            }
+
+    filterset_class = ClientFilter
 
 
 class ClientExternalViewSet(mixins.CreateModelMixin,
@@ -52,28 +63,28 @@ class ClientExternalViewSet(mixins.CreateModelMixin,
     ordering = ('created', )
     queryset = ExternalClient.objects.all()
     serializer_class = ExternalClientModelSerializer
-    
+
+
 class EconomicActivityViewSet(mixins.CreateModelMixin,
-                            mixins.RetrieveModelMixin,
-                            mixins.UpdateModelMixin,
-                            mixins.ListModelMixin,
-                            mixins.DestroyModelMixin,
-                            viewsets.GenericViewSet):
+                              mixins.RetrieveModelMixin,
+                              mixins.UpdateModelMixin,
+                              mixins.ListModelMixin,
+                              mixins.DestroyModelMixin,
+                              viewsets.GenericViewSet):
 
     permission_classes = [AllowAny]
     filter_backends = (filters.DjangoFilterBackend,)
     ordering = ('created', )
     queryset = EconomicActivity.objects.all()
-    serializer_class = EconomicActivityModelSerializer 
-
+    serializer_class = EconomicActivityModelSerializer
 
 
 class ClientViewSet(mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin, 
-                  mixins.UpdateModelMixin, 
-                  mixins.ListModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet,):
+                    mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.ListModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet,):
 
     def get_permissions(self):
         if self.action in ["list",]:
@@ -81,44 +92,40 @@ class ClientViewSet(mixins.CreateModelMixin,
         else:
             permissions = [IsAuthenticated]
         return [p() for p in permissions]
-    
+
     filter_backends = (filters.DjangoFilterBackend,)
     ordering = ('created',)
-    queryset= Client.objects.all()
+    queryset = Client.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return RetrieveClientModel
         return ClientModelSerializer
 
-   
-
     class ClientFilter(filters.FilterSet):
-        
 
         class Meta:
             model = Client
             fields = {
-               
-                'name': ['exact', 'contains'],
+
+                'name': ['exact', 'contains', 'icontains'],
                 'is_active': ['exact'],
 
                 'commune': ['exact', 'contains'],
                 'province': ['exact', 'contains'],
-                'region': ['exact', 'contains'],                
+                'region': ['exact', 'contains'],
 
                 "date_jurisdiction": ['exact', 'contains'],
                 'type_client': ['exact'],
 
 
-                #DATA FILTERS
-                'created': ['contains', 'gte', 'lte', 'year', 'month', 'day', 'year__range', 'month__range', 'day__range', 'date__range'],                
-             
-                }
+                # DATA FILTERS
+                'created': ['contains', 'gte', 'lte', 'year', 'month', 'day', 'year__range', 'month__range', 'day__range', 'date__range'],
+
+            }
 
     filterset_class = ClientFilter
-    
-    
+
     @action(detail=False, methods=['post'])
     def technica_info_add(self, request):
         """User sign in."""
@@ -129,9 +136,3 @@ class ClientViewSet(mixins.CreateModelMixin,
             'technical_info': TechnicalInfoSerializer(data).data,
         }
         return Response(data, status=status.HTTP_201_CREATED)
-
-
-    
-
-
-    

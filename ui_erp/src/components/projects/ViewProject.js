@@ -10,7 +10,7 @@ import ListLiftingsForClient from "./view_projects_gadgets/ListLiftingsForClient
 const ViewProject = () => {
   const location = useLocation();
   const [id, setId] = useState(location.pathname.slice(10));
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   const [dataProject, setDataProject] = useState(null);
 
@@ -51,19 +51,35 @@ const ViewProject = () => {
         </Link>
       </Col>
       <Col span={24} style={{ padding: "20px", marginTop: "20px" }}>
-        <Collapse >
+        <Collapse>
           {dataProject && (
             <>
+              {console.log(dataProject)}
               {dataProject.deparments.map((d, index) => (
-                <Collapse.Panel header={d.name} key={index}>
+                <Collapse.Panel
+                  header={
+                    <>
+                      {d.name} ({d.elements.length})
+                    </>
+                  }
+                  key={index}
+                >
                   <SectionFiles elements={d.elements} />
                 </Collapse.Panel>
               ))}
             </>
           )}
           <Collapse.Panel header="Levantamiento" key="3">
-            {dataProject && <ListLiftingsForClient id_client={dataProject.client.id} dataProject={dataProject} count={count} setCount={setCount} />}
+            {dataProject && (
+              <ListLiftingsForClient
+                id_client={dataProject.client.id}
+                dataProject={dataProject}
+                count={count}
+                setCount={setCount}
+              />
+            )}
           </Collapse.Panel>
+          <Collapse.Panel header="Puntos de captación" key="4"></Collapse.Panel>
         </Collapse>
       </Col>
     </Row>
