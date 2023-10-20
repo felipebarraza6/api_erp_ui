@@ -10,15 +10,28 @@ import {
   Button,
   Tag,
   notification,
+  Tooltip,
+  Typography,
+  Upload,
   Modal,
 } from "antd";
 import {
   GoogleCircleFilled,
   PlusSquareFilled,
+  LoadingOutlined,
+  FileImageOutlined,
+  EditFilled,
+  ArrowLeftOutlined,
+  UploadOutlined,
+  CloudDownloadOutlined,
+  PlusCircleFilled,
   CloudUploadOutlined,
 } from "@ant-design/icons";
 import { LiftingContext } from "../../containers/Lifting";
+import api from "../../api/endpoints";
 import Well from "./Well";
+
+const { Paragraph, Title } = Typography;
 
 const { Item } = Form;
 const { Option } = Select;
@@ -29,6 +42,34 @@ const WellForm = ({ init }) => {
   const { state, dispatch } = useContext(LiftingContext);
   const [visible, setVisible] = useState(false);
   const [coordinates, setCoordinates] = useState(null);
+  const [fileList, setFileList] = useState(state.photos);
+  const [loadSend, setLoadSend] = useState(false);
+  const [disabledBtn, setDisabledBtn] = useState(false);
+
+  const props = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+      dispatch({
+        type: "SET_IMAGE",
+        payload: {
+          list: newFileList,
+        },
+      });
+    },
+    beforeUpload: (file) => {
+      setFileList([...fileList, file]);
+      dispatch({
+        type: "SET_IMAGE",
+        payload: {
+          list: [...fileList, file],
+        },
+      });
+      return false;
+    },
+  };
 
   const onSetWell = (values) => {
     dispatch({
@@ -77,52 +118,139 @@ const WellForm = ({ init }) => {
     });
   };
 
+  const onSendApi = async (values) => {
+    setLoadSend(true);
+    setDisabledBtn(true);
+    var data = {};
+
+    if (state.is_external) {
+      data = {
+        external_client: await api.external_clients
+          .create(state.client_external)
+          .then((r) => r.data.id),
+        is_external: state.is_external,
+      };
+      const rq = await api.liftings.create(data).then(async (r) => {
+        state.wells.map(async (object, index) => {
+          const rq_well = await api.liftings.wells
+            .create({
+              lifting: r.data.uuid,
+              is_dga: true,
+              ...object,
+            })
+            .then(async (res) => {
+              if (object.photos.length > 0) {
+                object.photos.map(async (photo) => {
+                  var rq_photo = await api.liftings.wells
+                    .photo({ file: photo, id: res.data.id })
+                    .then((response) => {
+                      if (state.wells.length - 1 == index) {
+                        notification.success({
+                          message: "Información enviada correctamente!",
+                        });
+                        setTimeout(function () {
+                          window.location.assign("https://smarthydro.cl");
+                        }, 4000);
+                      }
+                    });
+                });
+              } else {
+                if (state.wells.length - 1 == index) {
+                  notification.success({
+                    message: "Información enviada correctamente!",
+                  });
+                  setTimeout(function () {
+                    window.location.assign("https://smarthydro.cl");
+                  }, 4000);
+                }
+              }
+            });
+        });
+      });
+    } else {
+      data = {
+        client: state.client_api,
+        is_external: state.is_external,
+      };
+      const rq = await api.liftings.create(data).then(async (r) => {
+        state.wells.map(async (object) => {
+          const rq_well = await api.liftings.wells
+            .create({
+              lifting: r.data.uuid,
+              is_dga: true,
+              ...object,
+            })
+            .then(async (res) => {
+              if (object.photos.length > 0) {
+                object.photos.map(async (photo) => {
+                  var rq_photo = await api.liftings.wells
+                    .photo({ file: photo, id: res.data.id })
+                    .then((response) => {
+                      notification.success({
+                        message: "Información enviada correctamente!",
+                      });
+                      setVisible(false);
+                      dispatch({
+                        type: "RESET_ALL_APP_INTERNAL",
+                      });
+                    });
+                });
+              } else {
+                notification.success({
+                  message: "Información enviada correctamente!",
+                });
+                dispatch({
+                  type: "RESET_ALL_APP_INTERNAL",
+                });
+                setVisible(false);
+              }
+            });
+        });
+      });
+    }
+  };
+
   const setModalView = (values) => {
     Modal.confirm({
       title: "Estás correcta la información ingresada del pozo?",
-      okText: init ? "Si, actualizar información" : "Si, subir información",
+      footer: [
+        <Button
+          style={{ marginRight: "10px" }}
+          icon={<EditFilled />}
+          onClick={() => Modal.destroyAll()}
+        >
+          No, continuar editando
+        </Button>,
+        <Button
+          style={{ marginRight: "10px" }}
+          icon={<PlusCircleFilled />}
+          onClick={() => {
+            onSetWell(values);
+
+            const modal = Modal.success({
+              title:
+                "Pozo ingresado correctamente, ahora puedes ingresar la información del nuevo pozo",
+            });
+
+            Modal.destroyAll();
+          }}
+        >
+          {init ? "Si, actualizar información" : "Si, agregar otro pozo"}
+        </Button>,
+        <Button
+          style={{ marginRight: "10px" }}
+          type="primary"
+          icon={<UploadOutlined />}
+          onClick={() => {
+            onSetWell(values);
+            setVisible(true);
+          }}
+        >
+          Si, Finalizar registro
+        </Button>,
+      ],
       cancelText: "No, continuar editando",
-      width: "600px",
-      onOk: () => {
-        onSetWell(values);
-        let secondsToGo = 15;
-        const modal = Modal.success({
-          title: "Pozo ingresado correctamente",
-          content: (
-            <p>
-              Se limpiará el formulario para ingresar un nuevo pozo o pincha en{" "}
-              <b>
-                FINALIZAR
-                <CloudUploadOutlined />
-              </b>{" "}
-              para terminar el proceso, esta ventana se cerrará en {
-                secondsToGo
-              }{" "}
-              segundos.
-            </p>
-          ),
-        });
-        const timer = setInterval(() => {
-          secondsToGo -= 1;
-          modal.update({
-            content: (
-              <p>
-                Se limpiara el formulario para ingresar un nuevo pozo o pincha
-                en{" "}
-                <b>
-                  FINALIZAR <CloudUploadOutlined />
-                </b>{" "}
-                para terminar el proceso, está ventana de cerrara en{" "}
-                {secondsToGo} segundos.
-              </p>
-            ),
-          });
-        }, 1000);
-        setTimeout(() => {
-          clearInterval(timer);
-          modal.destroy();
-        }, secondsToGo * 1000);
-      },
+      width: "700px",
     });
   };
 
@@ -141,6 +269,11 @@ const WellForm = ({ init }) => {
   const okNext = () => {};
 
   useEffect(() => {
+    if (state.photos.length == 0) {
+      setFileList([]);
+    } else {
+      setFileList(state.photos);
+    }
     const getGpsPosition = () => {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -169,7 +302,7 @@ const WellForm = ({ init }) => {
     } else {
       form.resetFields();
     }
-  }, [state.conunt_form]);
+  }, [state.conunt_form, state.photos, state.wellDraft]);
 
   return (
     <Form
@@ -179,6 +312,73 @@ const WellForm = ({ init }) => {
       className="my-select-container"
       initialValues={state.selected_well}
     >
+      <Modal
+        title={
+          !loadSend && (
+            <Title level={4} style={{ textAlign: "center" }}>
+              ¿Estas seguro de finalizar el proceso de levantamiento de
+              información?
+            </Title>
+          )
+        }
+        visible={visible}
+        footer={[]}
+        onCancel={() => setVisible(false)}
+      >
+        <Row
+          justify="space-around"
+          align="middle"
+          className="my-select-container"
+        >
+          <Col span={24} style={{ textAlign: "center" }}>
+            {loadSend && (
+              <>
+                <Title level={3}>
+                  Tus datos ingresados están siendo procesados...
+                </Title>
+                <Paragraph>
+                  En cuanto recibamos tú información nos pondremos en contacto a
+                  la brevedad...
+                </Paragraph>
+                <LoadingOutlined
+                  style={{
+                    fontSize: "25px",
+                    marginTop: "20px",
+                    marginBottom: "35px",
+                  }}
+                />
+                <></>
+              </>
+            )}
+          </Col>
+          <Col>
+            <Button
+              disabled={disabledBtn}
+              style={styles.btn}
+              type="primary"
+              icon={<CloudUploadOutlined />}
+              onClick={onSendApi}
+              size="large"
+            >
+              FINALIZAR
+            </Button>
+          </Col>
+
+          {!loadSend && (
+            <Col>
+              <Button
+                icon={<ArrowLeftOutlined />}
+                style={styles.btn}
+                size="large"
+                danger
+                onClick={() => setVisible(false)}
+              >
+                CANCELAR
+              </Button>
+            </Col>
+          )}
+        </Row>
+      </Modal>
       <Card hoverable={true} style={styles.card1}>
         <Row>
           <Col
@@ -208,7 +408,7 @@ const WellForm = ({ init }) => {
             >
               <Select
                 placeholder="Tipo de captación"
-                dropdownStyle={styles.input}
+                dropdownStyle={styles.input.select}
                 style={{ width: "200px" }}
               >
                 <Option value="pozo">Pozo</Option>
@@ -443,7 +643,7 @@ const WellForm = ({ init }) => {
             <Select
               placeholder="¿Cuenta con sensor de flujo?"
               style={styles.input}
-              dropdownStyle={styles.input}
+              dropdownStyle={styles.input.select}
             >
               <Option value={true}>SI</Option>
               <Option value={false}>NO</Option>
@@ -458,7 +658,7 @@ const WellForm = ({ init }) => {
             <Select
               placeholder=" ¿Cuenta con factibilidad eléctrica 220v?"
               style={styles.input}
-              dropdownStyle={styles.input}
+              dropdownStyle={styles.input.select}
             >
               <Option value={true}>SI</Option>
               <Option value={false}>NO</Option>
@@ -471,6 +671,107 @@ const WellForm = ({ init }) => {
               placeholder="Describe cualquier observación necesaria"
             />
           </Item>
+          {window.innerWidth > 800 ? (
+            <Tooltip
+              overlayStyle={{ backgroundColor: "#1890ff" }}
+              title={
+                <>
+                  <Paragraph style={{ color: "white" }}>
+                    Debes ingresar como minímo las siguientes fotos:
+                  </Paragraph>
+                  <Paragraph style={{ color: "white" }}>
+                    1) Foto general del pozo.
+                  </Paragraph>
+                  <Paragraph style={{ color: "white" }}>
+                    2) Foto del lugar de emplazamiento del pozo.
+                  </Paragraph>
+                  <Paragraph style={{ color: "white" }}>
+                    3) Foto del detalle del ducto de salida del pozo.
+                  </Paragraph>
+                  <Paragraph style={{ color: "white" }}>
+                    Si no cuentas con fotos en este momento, las puedes enviar
+                    más tarde vía correo electrónico.
+                  </Paragraph>
+                </>
+              }
+            >
+              <Card hoverable={true} style={styles.card}>
+                <Tag style={styles.tagph}>
+                  <FileImageOutlined style={{ fontSize: "17px" }} /> FOTOS{" "}
+                  {state.photos.length}
+                </Tag>
+                {(state.photos.length === 0) &
+                (state.active_alert_img === true) ? (
+                  <Paragraph
+                    style={{
+                      borderRadius: "6px",
+                      color: "rgb(194, 24, 7, 76)",
+                      backgroundColor: "rgb(194, 24, 7, 0.1)",
+                      border: "1px solid red",
+                      padding: "5px",
+                    }}
+                  >
+                    DEBES INGRESAR AL MENOS UNA IMÁGEN PARA CONTINUAR
+                  </Paragraph>
+                ) : (
+                  ""
+                )}
+                <Upload {...props} fileList={fileList}>
+                  <Button
+                    type="primary"
+                    icon={<PlusCircleFilled />}
+                    style={styles.btn}
+                  >
+                    Agregar
+                  </Button>
+                </Upload>
+              </Card>
+            </Tooltip>
+          ) : (
+            <Card hoverable={true} style={styles.card}>
+              <Paragraph style={{ color: "#262626" }}>
+                <b> Debes ingresar como minímo las siguientes fotos: </b>
+              </Paragraph>
+              <Paragraph style={{ color: "#262626" }}>
+                1) Foto general del pozo.
+              </Paragraph>
+              <Paragraph style={{ color: "#262626" }}>
+                2) Foto del lugar de emplazamiento del pozo.
+              </Paragraph>
+              <Paragraph style={{ color: "#262626" }}>
+                3) Foto del detalle del ducto de salida del pozo.
+              </Paragraph>
+              <Tag style={styles.tag}>
+                <FileImageOutlined /> FOTOS {state.photos.length}
+              </Tag>
+              {(state.photos.length === 0) &
+              (state.active_alert_img === true) ? (
+                <Paragraph
+                  style={{
+                    borderRadius: "6px",
+                    color: "rgb(194, 24, 7, 76)",
+                    backgroundColor: "rgb(194, 24, 7, 0.1)",
+                    border: "1px solid red",
+                    padding: "5px",
+                  }}
+                >
+                  DEBES INGRESAR AL MENOS UNA IMÁGEN PARA CONTINUAR
+                </Paragraph>
+              ) : (
+                ""
+              )}
+              <Upload {...props} fileList={fileList} previewFile={false}>
+                <Button
+                  size="small"
+                  type="primary"
+                  icon={<PlusCircleFilled />}
+                  style={styles.btn}
+                >
+                  Agregar
+                </Button>
+              </Upload>
+            </Card>
+          )}
         </Col>
         <Col xl={14} lg={14} xs={24}>
           <Affix>
@@ -508,6 +809,14 @@ const WellForm = ({ init }) => {
 };
 
 const styles = {
+  card: {
+    borderRadius: "10px",
+    width: window.innerWidth < 800 ? "100%" : "90%",
+    marginTop: "10px",
+    marginBottom: "10px",
+    backgroundColor: "white",
+    border: "1px solid #white",
+  },
   input2: {
     borderRadius: "10px",
     color: "#001529",
@@ -531,10 +840,20 @@ const styles = {
   tag: {
     borderRadius: "10px",
   },
+  tagph: {
+    borderRadius: "10px",
+    paddong: "5px",
+    fontSize: "17px",
+  },
   input: {
     borderRadius: "10px",
     color: "#001529",
     width: "90%",
+    select: {
+      borderRadius: "10px",
+      color: "#001529",
+      width: window.innerWidth < 900 ? "90%" : "200px",
+    },
   },
   btn: {
     borderRadius: "10px",
