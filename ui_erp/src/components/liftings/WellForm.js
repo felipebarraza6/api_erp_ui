@@ -302,7 +302,7 @@ const WellForm = ({ init }) => {
     } else {
       form.resetFields();
     }
-  }, [state.conunt_form, state.photos, state.wellDraft]);
+  }, [state.conunt_form, state.wellDraft]);
 
   return (
     <Form
