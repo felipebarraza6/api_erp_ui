@@ -1,72 +1,191 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Col, Row, Table, Tag, Card, Badge } from "antd";
+import {
+  Typography,
+  Col,
+  Row,
+  Table,
+  Tag,
+  Card,
+  Input,
+  Button,
+  Checkbox,
+  Modal,
+  Select,
+} from "antd";
 import api from "../../api/endpoints_telemetry";
-import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  ExportOutlined,
+  CloseCircleFilled,
+  ArrowLeftOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Link } from "react-router-dom";
 const { Title } = Typography;
 
 const Home = () => {
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [data, setData] = useState([]);
-  const getData = async (page) => {
-    const rq1 = await api.wells.list(page).then((r) => {
-      setData((prevData) => [
-        ...prevData,
-        ...r.results.sort((a, b) => a.name_client.localeCompare(b.name_client)),
-      ]);
-      setTotal(r.count);
-    });
 
-    if (page * 10 < total) {
-      getData(page + 1);
-    }
+  const ModalViewSendDgaToday = (well) => {
+    Modal.info({
+      title: well.code_dga_site,
+      width: 600,
+      content: (
+        <>
+          {well.day_send_dga.map((send) => (
+            <div
+              style={{ border: "0px 1px 0px 0px solid black", padding: "5px" }}
+            >
+              <CheckCircleFilled style={{ color: "green" }} />{" "}
+              {send.date_time_medition.slice(0, 10)}{" "}
+              {send.date_time_medition.slice(11, 16)}
+              {": "}
+              caudal: {send.flow} (lt) - nivel: {send.nivel} (mt) - total:
+              {send.total} (m³)
+            </div>
+          ))}
+        </>
+      ),
+    });
   };
-  console.log(data);
+
+  const today = new Date();
+  const todayString = `${today.getFullYear()}-${
+    today.getMonth() + 1
+  }-${today.getDate()}`;
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       const response = await api.wells.list(1);
       const totalCount = response.count;
-      const totalPages = Math.ceil(totalCount / 10);
-      const allData = [];
 
       const get = await api.wells.list(page);
 
       setData(get.results);
       setTotal(totalCount);
+
+      setLoading(false);
     };
 
     fetchData();
-  }, []);
+  }, [page]);
 
   return (
     <Row>
       <Col span={24}>
-        <Title level={3}>Puntos de captacion activos ({total})</Title>
+        <Row align={"middle"} style={{ marginBottom: "10px" }}>
+          <Col>FILTROS: </Col>
+          <Col style={{ marginLeft: "10px" }}>
+            <Input
+              style={{ width: "250px" }}
+              placeholder="Nombre punto captacion"
+            />
+          </Col>
+          <Col style={{ marginLeft: "10px" }}>
+            <Input style={{ width: "400px" }} placeholder="Nombre cliente" />
+          </Col>
+          <Col>
+            <Button
+              icon={<SearchOutlined />}
+              type="primary"
+              style={{ marginLeft: "10px" }}
+            >
+              Buscar
+            </Button>
+          </Col>
+        </Row>
       </Col>
       <Col span={24}>
         <Table
           rowKey="id"
+          loading={loading}
           bordered
           size={"small"}
+          pagination={{
+            pageSize: 10,
+            simple: true,
+            total: total,
+            onChange: (page) => setPage(page),
+          }}
           dataSource={data}
           expandable={{
             expandedRowRender: (record) => (
-              <Row align={"middle"}>
+              <Row align={"middle"} justify={"center"}>
                 <Col span={8}>
-                  <Card
-                    style={{ margin: "5px" }}
-                    title="Credenciales Ikolu"
-                    hoverable
-                  >
+                  <Card style={{ margin: "5px" }} title="Ikolu" hoverable>
                     <b>usuario:</b> {record.user.email} <br />
                     <b>clave:</b> {record.user.txt_password} <br />
                     <br />
-                    <b>último inicio de sesión:</b>{" "}
-                    {record.user.last_login &&
-                      record.user.last_login.slice(0, 10)}{" "}
-                    {record.user.last_login &&
-                      record.user.last_login.slice(11, 16)}
+                    <Row>
+                      <Col span={12}>
+                        <b>Mi Pozo: </b>{" "}
+                        {record.module_1 ? (
+                          <>
+                            <CheckCircleFilled style={{ color: "green" }} />
+                            <br />
+                          </>
+                        ) : (
+                          <>
+                            <CloseCircleFilled style={{ color: "red" }} />
+                            <br />
+                          </>
+                        )}{" "}
+                        <b>DGA: </b>{" "}
+                        {record.module_2 ? (
+                          <>
+                            <CheckCircleFilled style={{ color: "green" }} />
+                            <br />
+                          </>
+                        ) : (
+                          <>
+                            <CloseCircleFilled style={{ color: "red" }} />
+                            <br />
+                          </>
+                        )}{" "}
+                        <b>Datos y reportes: </b>{" "}
+                        {record.module_3 ? (
+                          <>
+                            <CheckCircleFilled style={{ color: "green" }} />
+                            <br />
+                          </>
+                        ) : (
+                          <>
+                            <CloseCircleFilled style={{ color: "red" }} />
+                            <br />
+                          </>
+                        )}{" "}
+                      </Col>
+                      <Col span={12}>
+                        <b>Graficos: </b>{" "}
+                        {record.module_4 ? (
+                          <>
+                            <CheckCircleFilled style={{ color: "green" }} />
+                            <br />
+                          </>
+                        ) : (
+                          <>
+                            <CloseCircleFilled style={{ color: "red" }} />
+                            <br />
+                          </>
+                        )}{" "}
+                        <b>Indicadores: </b>{" "}
+                        {record.module_5 ? (
+                          <>
+                            <CheckCircleFilled style={{ color: "green" }} />
+                            <br />
+                          </>
+                        ) : (
+                          <>
+                            <CloseCircleFilled style={{ color: "red" }} />
+                            <br />
+                          </>
+                        )}{" "}
+                      </Col>
+                    </Row>
                   </Card>
                 </Col>
                 <Col span={8}>
@@ -86,25 +205,99 @@ const Home = () => {
                 </Col>
                 <Col span={8}>
                   <Card style={{ margin: "5px" }} title="Variables" hoverable>
-                    {record.is_prom_flow ? (
-                      <Tag
-                        style={{ marginBottom: "10px" }}
-                        color="blue-inverse"
-                      >
-                        Cudal Promedio
-                      </Tag>
-                    ) : (
-                      <Tag style={{ marginBottom: "10px" }} color="blue">
-                        Caudal Instantaneo
-                      </Tag>
-                    )}
-                    <br />
                     {record.variables.map((variable) => (
                       <Tag color="geekblue-inverse">
                         {variable.type_variable}: {variable.str_variable}
                       </Tag>
                     ))}
                   </Card>
+                </Col>
+                <Col span={20} style={{ marginTop: "20px" }}>
+                  <center>
+                    <Title level={4}>Datos de monitoreo ({todayString})</Title>
+                  </center>
+                  <Table
+                    style={{
+                      marginTop: "18px",
+                      border: "1px solid #d6d6d6",
+                      borderRadius: "5px",
+                      marginBottom: "10px",
+                    }}
+                    bordered
+                    dataSource={record.day_data}
+                    columns={[
+                      {
+                        title: "Fecha",
+                        dataIndex: "date_time_medition",
+                        render: (date) => date.slice(0, 10),
+                      },
+                      {
+                        title: "Hora",
+                        dataIndex: "date_time_medition",
+                        render: (date) => date.slice(11, 16),
+                      },
+                      {
+                        title: "Nivel(mt)",
+                        dataIndex: "nivel",
+                        render: (nivel) =>
+                          nivel < 0 ? (
+                            <Tag color="volcano-inverse">{nivel}</Tag>
+                          ) : (
+                            nivel
+                          ),
+                      },
+                      {
+                        title: `Nivel Freatico(mt) - P.N(${parseFloat(
+                          record.d3
+                        ).toFixed(1)} mt)`,
+                        dataIndex: "nivel",
+                        render: (nivel_v) => {
+                          var nivel = parseFloat(nivel_v).toFixed(1);
+                          var posNivel = parseFloat(record.d3).toFixed(1);
+                          var nivelF = parseFloat(posNivel - nivel).toFixed(1);
+
+                          if (nivel < 0) {
+                            return <Tag color="red-inverse">{nivelF}</Tag>;
+                          } else {
+                            return nivelF;
+                          }
+                        },
+                      },
+                      {
+                        title: "Caudal(lt)",
+                        dataIndex: "flow",
+                        render: (caudal) =>
+                          caudal < -0.2 ? (
+                            <Tag color="volcano-inverse">{caudal}</Tag>
+                          ) : caudal > 100 ? (
+                            <Tag
+                              color="yellow-inverse"
+                              style={{ color: "black" }}
+                            >
+                              {caudal}
+                            </Tag>
+                          ) : (
+                            caudal
+                          ),
+                      },
+                      {
+                        title: "Total(m³)",
+                        render: (well) => {
+                          if (record.day_data.length > 1) {
+                            var old_total = record.day_data[1].total;
+                            var new_total = well.total;
+                            if (old_total < new_total) {
+                              return (
+                                <Tag color="red-inverse">{well.total}</Tag>
+                              );
+                            } else {
+                              return well.total;
+                            }
+                          }
+                        },
+                      },
+                    ]}
+                  ></Table>
                 </Col>
               </Row>
             ),
@@ -137,9 +330,11 @@ const Home = () => {
                       <br />
                     </>
                   )}
-                  <Tag color="geekblue-inverse" style={{ marginTop: "5px" }}>
-                    {well.standard}
-                  </Tag>
+                  {well.standard && (
+                    <Tag color="geekblue-inverse" style={{ marginTop: "5px" }}>
+                      {well.standard}
+                    </Tag>
+                  )}
                   <Tag
                     color={well.is_thethings ? "green-inverse" : "blue-inverse"}
                     style={{ marginBottom: "5px" }}
@@ -156,15 +351,44 @@ const Home = () => {
               filterSearch: true,
             },
             {
-              title: "Fecha ultimo dato",
-              dataIndex: "last_data",
-              render: (last_data) => (
-                <Tag color="black">
-                  {last_data.date_time_medition &&
-                    last_data.date_time_medition.slice(0, 10)}{" "}
-                  {last_data.date_time_medition &&
-                    last_data.date_time_medition.slice(11, 16) + " hrs"}
-                </Tag>
+              title: "Fechas monitoreo",
+              width: "18%",
+              render: (well) => (
+                <>
+                  <Tag color="black">Primer dato</Tag>
+                  <Tag color="black" style={{ marginBottom: "10px" }}>
+                    {well.first_data.date_time_medition &&
+                      well.first_data.date_time_medition.slice(0, 10)}{" "}
+                    {well.first_data.date_time_medition &&
+                      well.first_data.date_time_medition.slice(11, 16)}
+                  </Tag>
+                  <Tag color="blue-inverse">Ultimo dato</Tag>
+                  <Tag color="blue-inverse" style={{ marginBottom: "10px" }}>
+                    {well.last_data.date_time_medition &&
+                      well.last_data.date_time_medition.slice(0, 10)}{" "}
+                    {well.last_data.date_time_medition &&
+                      well.last_data.date_time_medition.slice(11, 16)}
+                  </Tag>
+                  {well.code_dga_site && (
+                    <>
+                      <Tag color="green" style={{ color: "black" }}>
+                        Inicio envio DGA
+                      </Tag>
+                      <Tag color="green" style={{ color: "black" }}>
+                        {well.date_reporting_dga ? (
+                          <>
+                            {well.date_reporting_dga &&
+                              well.date_reporting_dga.slice(0, 10)}{" "}
+                            {well.date_reporting_dga &&
+                              well.date_reporting_dga.slice(11, 16)}
+                          </>
+                        ) : (
+                          "Sin fecha"
+                        )}
+                      </Tag>
+                    </>
+                  )}
+                </>
               ),
             },
             {
@@ -175,7 +399,11 @@ const Home = () => {
                     color={
                       well.last_data.flow >= 0
                         ? well.is_prom_flow
-                          ? "geekblue"
+                          ? well.last_data.flow > 100
+                            ? "yellow-inverse"
+                            : "geekblue"
+                          : well.last_data.flow > 100
+                          ? "yellow-inverse"
                           : "blue"
                         : "red-inverse"
                     }
@@ -238,93 +466,56 @@ const Home = () => {
                     }
                     return null;
                   })}
-                  <Tag color="blue-inverse">PULSOS: {well.scale}</Tag>
+                  <Tag color="blue-inverse" style={{ marginTop: "5px" }}>
+                    PULSOS: {well.scale}
+                  </Tag>
                 </center>
               ),
             },
-
             {
-              title: "Envio DGA",
+              title: "Estado DGA",
               width: "13%",
               render: (well) => (
                 <>
-                  {(well.standard === "MAYOR") & well.is_send_dga ? (
+                  {well.is_send_dga & (well.day_send_dga.length > 0) ? (
                     <>
-                      {well.last_data.is_send_dga ? (
-                        <>
-                          <CheckCircleFilled style={{ color: "green" }} />{" "}
-                          {well.day_data[9].date_time_medition.slice(0, 10)}{" "}
-                          {well.day_data[9].date_time_medition.slice(11, 16)}
-                          <br />
-                          Caudal: {well.day_data[9].flow}
-                          <br />
-                          Nivel:{" "}
-                          {parseFloat(well.d3 - well.day_data[9].nivel).toFixed(
-                            1
-                          )}
-                          <br />
-                          Acumulado: {well.day_data[9].total}
-                        </>
-                      ) : (
-                        <>
-                          <CloseCircleFilled style={{ color: "red" }} />{" "}
-                          {well.last_data.soap_return}
-                          {well.day_data[9].date_time_medition.slice(
-                            0,
-                            10
-                          )}{" "}
-                          {well.day_data[9].date_time_medition.slice(11, 16)}
-                          <br />
-                          Caudal: {well.day_data[9].flow}
-                          <br />
-                          Nivel:{" "}
-                          {parseFloat(well.d3 - well.day_data[9].nivel).toFixed(
-                            1
-                          )}
-                          <br />
-                          Acumulado: {well.day_data[9].total}
-                        </>
-                      )}
+                      <Button
+                        size="small"
+                        icon={<CheckCircleFilled />}
+                        type="primary"
+                        style={{ marginBottom: "10px" }}
+                        onClick={() => ModalViewSendDgaToday(well)}
+                      >
+                        {todayString}: enviados({well.day_send_dga.length})
+                      </Button>
+                      <Tag color="blue">Ultimo dato reportado</Tag>
+                      <Tag color="blue">
+                        {well.day_send_dga[0].date_time_medition.slice(0, 10)}{" "}
+                        {well.day_send_dga[0].date_time_medition.slice(11, 16)}
+                      </Tag>
                     </>
                   ) : (
-                    ""
+                    <Tag color="volcano-inverse">SIN ENVIO</Tag>
                   )}
-                  {(well.standard === "MEDIO") & well.is_send_dga ? (
-                    <>
-                      {well.last_data.is_send_dga ? (
+
+                  {well.code_dga_site && (
+                    <Button
+                      icon={
                         <>
-                          <CheckCircleFilled style={{ color: "green" }} />{" "}
-                          {well.day_data[9].date_time_medition.slice(0, 10)}{" "}
-                          {well.day_data[9].date_time_medition.slice(11, 16)}
-                          <br />
-                          Caudal: {well.day_data[9].flow}
-                          <br />
-                          Nivel:{" "}
-                          {parseFloat(well.d3 - well.day_data[9].nivel).toFixed(
-                            1
-                          )}
-                          <br />
-                          Acumulado: {well.day_data[9].total}
+                          <ExportOutlined /> DGA:{" "}
                         </>
-                      ) : (
-                        <>
-                          <CloseCircleFilled style={{ color: "red" }} />{" "}
-                          {well.day_data[9].date_time_medition.slice(0, 10)}{" "}
-                          {well.day_data[9].date_time_medition.slice(11, 16)}
-                          <br />
-                          Caudal: {well.day_data[9].flow}
-                          <br />
-                          Nivel:{" "}
-                          {parseFloat(well.d3 - well.day_data[9].nivel).toFixed(
-                            1
-                          )}
-                          <br />
-                          Acumulado: {well.day_data[9].total}
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    ""
+                      }
+                      size="small"
+                      type="primary"
+                      style={{ marginTop: "10px" }}
+                      onClick={() =>
+                        window.open(
+                          `https://snia.mop.gob.cl/cExtracciones2/#/consultaQR/${well.code_dga_site}`
+                        )
+                      }
+                    >
+                      {well.code_dga_site}
+                    </Button>
                   )}
                 </>
               ),

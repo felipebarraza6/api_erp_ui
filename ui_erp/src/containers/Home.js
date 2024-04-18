@@ -1,5 +1,5 @@
 //React
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 //Antd
 import { Layout, Menu, Typography } from "antd";
@@ -16,6 +16,7 @@ import {
   ProfileFilled,
   FolderOpenOutlined,
   BarChartOutlined,
+  DatabaseOutlined,
   SlidersFilled,
 } from "@ant-design/icons";
 
@@ -49,15 +50,23 @@ const { Header, Content, Sider } = Layout;
 
 const Home = () => {
   const location = useLocation();
+  const [viewSider, setViewSider] = useState(true);
 
   // Access the pathname
-  const pathname = location.pathname;
-  console.log(pathname);
+
+  useEffect(() => {
+    const pathname = location.pathname;
+    if (pathname === "/telemetry") {
+      setViewSider(false);
+    } else {
+      setViewSider(true);
+    }
+  }, [location.pathname]);
 
   return (
     <BrowserRouter>
       <Layout style={styles.layouts.principal}>
-        {pathname !== "/telemetry" && (
+        {viewSider && (
           <Sider style={styles.sider} width={"300px"}>
             <div>
               <Typography.Title style={styles.title}>
@@ -79,8 +88,14 @@ const Home = () => {
                   </>
                 }
               >
-                <Menu.Item key="200" icon={<BarChartOutlined />}>
-                  <Link to="/telemetry">Telemetría</Link>
+                <Menu.Item key="200" icon={<DatabaseOutlined />}>
+                  <a
+                    href="/telemetry"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Estado de servicio
+                  </a>
                 </Menu.Item>
               </Menu.SubMenu>
               <Menu.Item key="1" icon={<DashboardOutlined />}>
