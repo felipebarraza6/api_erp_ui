@@ -52,29 +52,6 @@ const Home = () => {
   return (
     <Row>
       <Col span={24}>
-        <Row align={"middle"} style={{ marginBottom: "10px" }}>
-          <Col>FILTROS: </Col>
-          <Col style={{ marginLeft: "10px" }}>
-            <Input
-              style={{ width: "250px" }}
-              placeholder="Nombre punto captacion"
-            />
-          </Col>
-          <Col style={{ marginLeft: "10px" }}>
-            <Input style={{ width: "400px" }} placeholder="Nombre cliente" />
-          </Col>
-          <Col>
-            <Button
-              icon={<SearchOutlined />}
-              type="primary"
-              style={{ marginLeft: "10px" }}
-            >
-              Buscar
-            </Button>
-          </Col>
-        </Row>
-      </Col>
-      <Col span={24}>
         <Table
           rowKey="id"
           loading={loading}
@@ -264,7 +241,6 @@ const Home = () => {
                 </center>
               ),
             },
-
             {
               title: "Acumulado(m³)",
               render: (well) => (
@@ -280,28 +256,40 @@ const Home = () => {
               width: "13%",
               render: (well) => (
                 <>
-                  {well.code_dga_site & (well.day_send_dga.length > 0) ? (
+                  {well.is_send_dga ? (
                     <>
-                      <Button
-                        size="small"
-                        icon={<CheckCircleFilled />}
-                        type="primary"
-                        style={{ marginBottom: "10px" }}
-                        onClick={() => ModalViewSendDgaToday(well)}
-                      >
-                        {todayString}: enviados({well.day_send_dga.length})
-                      </Button>
-                      <Tag color="blue">Ultimo dato reportado</Tag>
-                      <Tag color="blue">
-                        {well.day_send_dga[0].date_time_medition.slice(0, 10)}{" "}
-                        {well.day_send_dga[0].date_time_medition.slice(11, 16)}
-                      </Tag>
+                      {well.day_send_dga.length > 0 ? (
+                        <>
+                          <Button
+                            size="small"
+                            icon={<CheckCircleFilled />}
+                            type="primary"
+                            style={{ marginBottom: "10px" }}
+                            onClick={() => ModalViewSendDgaToday(well)}
+                          >
+                            {todayString}: enviados({well.day_send_dga.length})
+                          </Button>
+                          <Tag color="blue">Ultimo dato reportado</Tag>
+                          <Tag color="blue">
+                            {well.day_send_dga[0].date_time_medition.slice(
+                              0,
+                              10
+                            )}{" "}
+                            {well.day_send_dga[0].date_time_medition.slice(
+                              11,
+                              16
+                            )}
+                          </Tag>
+                        </>
+                      ) : (
+                        <Tag color="volcano-inverse">NO ENVIA A DGA</Tag>
+                      )}
                     </>
                   ) : (
-                    <Tag color="volcano-inverse">NO DEBE ENVIAR</Tag>
+                    <Tag color="blue-inverse">NO DEBE ENVIAR</Tag>
                   )}
 
-                  {well.code_dga_site && (
+                  {well.is_send_dga && (
                     <Button
                       icon={
                         <>
