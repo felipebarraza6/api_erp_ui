@@ -1,56 +1,158 @@
 import React, { useEffect, useState } from "react";
-import {
-  Typography,
-  Col,
-  Row,
-  Table,
-  Tag,
-  Card,
-  Input,
-  Button,
-  Checkbox,
-  Modal,
-  Select,
-} from "antd";
+import { Col, Row, Table, Tag, Input, Button, Select } from "antd";
 import api from "../../api/endpoints_telemetry";
 import {
   CheckCircleFilled,
   ExportOutlined,
   CloseCircleFilled,
-  ArrowLeftOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
 import { ModalViewSendDgaToday } from "./Modals";
 import ExpandedRow from "./ExpandedRow";
-
-const { Title } = Typography;
 
 const Home = () => {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
   const [data, setData] = useState([]);
+
+  // filters
+  const [clientName, setClientName] = useState("");
+
+  const [count, setCount] = useState(0);
+
   const today = new Date();
   const todayString = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const response = await api.wells.list(1);
-      const totalCount = response.count;
-      const get = await api.wells.list(page);
-      setData(get.results);
-      setTotal(totalCount);
-      setLoading(false);
-    };
+  const fetchData = async () => {
+    setLoading(true);
+    const response = await api.wells.list(1, clientName);
+    const totalCount = response.count;
+    setTotalPage(Math.ceil(totalCount / 10));
+    const get = await api.wells.list(page, clientName);
+    setData(get.results);
+    setTotal(totalCount);
+    setLoading(false);
+  };
 
+  const fetchDataForErrorDay = async () => {
+    setLoading(true);
+    const response = await api.wells.list(1, clientName);
+    const totalCount = response.count;
+    const allData = [];
+    for (let i = 1; i <= Math.ceil(totalCount / 10); i++) {
+      const get = await api.wells.list(i, clientName);
+      allData.push(...get.results);
+    }
+    const filteredData = allData.filter((well) => {
+      const loggerDate = new Date(well.last_data.date_time_last_logger);
+      const diffInDays = Math.floor(
+        (today - loggerDate) / (1000 * 60 * 60 * 24)
+      );
+      return diffInDays > 0;
+    });
+    setData(filteredData);
+    setTotal(filteredData.length);
+    setLoading(false);
+  };
+
+  const fetchDataForNivelError = async () => {
+    setLoading(true);
+    const response = await api.wells.list(1, clientName);
+    const totalCount = response.count;
+    const allData = [];
+    for (let i = 1; i <= Math.ceil(totalCount / 10); i++) {
+      const get = await api.wells.list(i, clientName);
+      allData.push(...get.results);
+    }
+    const filteredData = allData.filter((well) => {
+      return well.last_data.nivel < 0 || well.last_data.nivel > 1000;
+    });
+    setData(filteredData);
+    setTotal(filteredData.length);
+    setLoading(false);
+  };
+
+  const fetchDataForFlowError = async () => {
+    setLoading(true);
+    const response = await api.wells.list(1, clientName);
+    const totalCount = response.count;
+    const allData = [];
+    for (let i = 1; i <= Math.ceil(totalCount / 10); i++) {
+      const get = await api.wells.list(i, clientName);
+      allData.push(...get.results);
+    }
+    const filteredData = allData.filter((well) => {
+      return well.last_data.flow < 0 || well.last_data.flow > 1000;
+    });
+    setData(filteredData);
+    setTotal(filteredData.length);
+    setLoading(false);
+  };
+
+  useEffect(() => {
     fetchData();
-  }, [page]);
+  }, [page, count]);
 
   return (
     <Row>
+      <Col span={24}>
+        <Row style={{ marginBottom: "10px" }}>
+          <Col span={3} style={{ marginRight: "10px" }}>
+            <Input
+              placeholder="Nombre cliente"
+              onChange={(e) => setClientName(e.target.value)}
+              value={clientName}
+            />
+          </Col>
+          <Col style={{ marginRight: "10px" }}>
+            <Button onClick={() => setCount(count + 1)} type="primary">
+              Filtrar nombre cliente
+            </Button>
+          </Col>
+          <Col style={{ marginRight: "10px" }}>
+            <Button
+              onClick={() => {
+                setCount(count + 1);
+                setClientName("");
+              }}
+            >
+              Limpiar filtros
+            </Button>
+          </Col>
+          <Col style={{ marginRight: "10px" }}>
+            <Button danger type="dashed" onClick={fetchDataForErrorDay}>
+              FILTRAR POR ERRORES DE LOGGER(dias) Y SIN ENVIO DE DATOS
+            </Button>
+          </Col>
+          <Col style={{ marginRight: "10px" }}>
+            <Button danger type="dashed" onClick={fetchDataForNivelError}>
+              FILTRAR POR NIVELES FUERA DE RANGO
+            </Button>
+          </Col>
+          <Col style={{ marginRight: "10px" }}>
+            <Button danger type="dashed" onClick={fetchDataForFlowError}>
+              FILTRAR POR CAUDALES FUERA DE RANGO
+            </Button>
+          </Col>
+          <Col>
+            Paginacion:
+            <Select
+              defaultValue={page}
+              onSelect={(select) => setPage(select)}
+              style={{ marginLeft: "7px" }}
+            >
+              {Array.from({ length: totalPage }, (_, index) => (
+                <Select.Option key={index + 1} value={index + 1}>
+                  {index + 1}
+                </Select.Option>
+              ))}
+            </Select>
+          </Col>
+        </Row>
+      </Col>
       <Col span={24}>
         <Table
           rowKey="id"

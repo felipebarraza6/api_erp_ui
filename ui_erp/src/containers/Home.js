@@ -98,15 +98,6 @@ const Home = () => {
                     Estado de servicio
                   </a>
                 </Menu.Item>
-                <Menu.Item key="200" icon={<SafetyOutlined />}>
-                  <a
-                    href="/telemetry"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Tickets de soporte/estado
-                  </a>
-                </Menu.Item>
               </Menu.SubMenu>
               <Menu.Item key="1" icon={<DashboardOutlined />}>
                 <Link to="/">Dashboard</Link>
