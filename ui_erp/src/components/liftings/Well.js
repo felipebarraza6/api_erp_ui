@@ -51,15 +51,7 @@ const Well = () => {
                 {" "}
                 5) {state.wellTemp && state.wellTemp.depth} <b>Mt</b>
               </Tag>
-              <Tag color="blue" style={{ ...styles.tagsWell.tag6 }}>
-                {" "}
-                6) {state.wellTemp && state.wellTemp.static_level} <b>Mt</b>
-              </Tag>
-              <Tag color="blue" style={{ ...styles.tagsWell.tag7 }}>
-                {" "}
-                7) {state.wellTemp && state.wellTemp.dynamic_level} <b>Mt</b>
-              </Tag>
-            </Col>
+                          </Col>
           </Row>
         </Col>
       )}

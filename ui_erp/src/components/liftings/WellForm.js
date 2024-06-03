@@ -489,11 +489,11 @@ const WellForm = ({ init }) => {
               suffix={
                 <>
                   <Tag color="blue" style={styles.tag}>
-                    Lt/SEG
+                    l/s
                   </Tag>
                 </>
               }
-              placeholder={"LITROS"}
+              placeholder={"LITROS/SEGUNDOS"}
               style={styles.input}
             />
           </Item>
@@ -514,7 +514,7 @@ const WellForm = ({ init }) => {
               suffix={
                 <>
                   <Tag color="blue" style={styles.tag}>
-                    Mt
+                    m
                   </Tag>
                 </>
               }
@@ -587,58 +587,14 @@ const WellForm = ({ init }) => {
               }
               suffix={
                 <Tag color="blue" style={styles.tag}>
-                  Mt
+                  m
                 </Tag>
               }
               placeholder="METROS"
               style={styles.input}
             />
           </Item>
-          <Item
-            label="Nivel estático"
-            style={styles.inputWell}
-            name="static_level"
-          >
-            <Input
-              type="number"
-              onChange={(value) => setWellDraft("static_level", value)}
-              prefix={
-                <Tag color="blue" style={styles.tag}>
-                  6
-                </Tag>
-              }
-              suffix={
-                <Tag color="blue" style={styles.tag}>
-                  Mt
-                </Tag>
-              }
-              placeholder="METROS"
-              style={styles.input}
-            />
-          </Item>
-          <Item
-            label="Nivel dinámico"
-            style={styles.inputWell}
-            name="dynamic_level"
-          >
-            <Input
-              type="number"
-              onChange={(value) => setWellDraft("dynamic_level", value)}
-              prefix={
-                <Tag color="blue" style={styles.tag}>
-                  7
-                </Tag>
-              }
-              suffix={
-                <Tag color="blue" style={styles.tag}>
-                  Mt
-                </Tag>
-              }
-              placeholder="METROS"
-              style={styles.input}
-            />
-          </Item>
-          <Tag style={styles.titleTagInfo}>Información adiconal</Tag>
+                    <Tag style={styles.titleTagInfo}>Información adiconal</Tag>
           <Item style={styles.inputWell} name="is_sensor_flow">
             <Select
               placeholder="¿Cuenta con sensor de flujo?"
