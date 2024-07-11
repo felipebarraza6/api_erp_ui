@@ -24,19 +24,24 @@ const TableData = ({ record }) => {
         {
           title: "Fecha/hora",
           render: (pt) => (
-            <Tag
-              color={pt.is_send_dga ? "green-inverse" : ""}
-              icon={
-                pt.is_send_dga && (
-                  <>
-                    <CheckCircleFilled /> (DGA)
-                  </>
-                )
-              }
-            >
-              {pt.date_time_medition.slice(0, 10)}{" "}
-              {pt.date_time_medition.slice(11, 16)}
-            </Tag>
+            <>
+              <Tag
+                color={pt.is_send_dga ? "green-inverse" : ""}
+                onClick={() => {
+                  Modal.info({ title: "Numero comprobante", content: pt.n_voucher });
+                }}
+                icon={
+                  pt.is_send_dga && (
+                    <>
+                      <CheckCircleFilled /> (DGA)
+                    </>
+                  )
+                }
+              >
+                {pt.date_time_medition.slice(0, 10)}{" "}
+                {pt.date_time_medition.slice(11, 16)}
+              </Tag>
+            </>
           ),
         },
         {
