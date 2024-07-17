@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Table, Tag, Input, Button, Select } from "antd";
+import { Col, Row, Table, Tag, Input, Button, Typography } from "antd";
 import api from "../../api/endpoints_telemetry";
 import {
   CheckCircleFilled,
@@ -8,6 +8,8 @@ import {
 } from "@ant-design/icons";
 import { ModalViewSendDgaToday } from "./Modals";
 import ExpandedRow from "./ExpandedRow";
+
+const { Title } = Typography;
 
 const Home = () => {
   const [page, setPage] = useState(1);
@@ -98,70 +100,60 @@ const Home = () => {
 
   return (
     <Row>
-      <Col span={24}>
-        <Row style={{ marginBottom: "10px" }}>
-          <Col span={3} style={{ marginRight: "10px" }}>
-            <Input
-              placeholder="Nombre cliente"
-              onChange={(e) => setClientName(e.target.value)}
-              value={clientName}
-            />
-          </Col>
-          <Col style={{ marginRight: "10px" }}>
-            <Button onClick={() => setCount(count + 1)} type="primary">
-              Filtrar nombre cliente
-            </Button>
-          </Col>
-          <Col style={{ marginRight: "10px" }}>
-            <Button
-              onClick={() => {
-                setCount(count + 1);
-                setClientName("");
-              }}
-            >
-              Limpiar filtros
-            </Button>
-          </Col>
-          <Col style={{ marginRight: "10px" }}>
-            <Button danger type="dashed" onClick={fetchDataForErrorDay}>
-              FILTRAR POR ERRORES DE LOGGER(dias) Y SIN ENVIO DE DATOS
-            </Button>
-          </Col>
-          <Col style={{ marginRight: "10px" }}>
-            <Button danger type="dashed" onClick={fetchDataForNivelError}>
-              FILTRAR POR NIVELES FUERA DE RANGO
-            </Button>
-          </Col>
-          <Col style={{ marginRight: "10px" }}>
-            <Button danger type="dashed" onClick={fetchDataForFlowError}>
-              FILTRAR POR CAUDALES FUERA DE RANGO
-            </Button>
-          </Col>
-          <Col>
-            Paginacion:
-            <Select
-              defaultValue={page}
-              onSelect={(select) => setPage(select)}
-              style={{ marginLeft: "7px" }}
-            >
-              {Array.from({ length: totalPage }, (_, index) => (
-                <Select.Option key={index + 1} value={index + 1}>
-                  {index + 1}
-                </Select.Option>
-              ))}
-            </Select>
-          </Col>
-        </Row>
-      </Col>
+      <Col span={24}></Col>
       <Col span={24}>
         <Table
           rowKey="id"
           loading={loading}
+          title={() => (
+            <Row style={{ marginBottom: "10px" }} justify={"space-around"}>
+              <Col>
+                <Input
+                  placeholder="Nombre cliente"
+                  onChange={(e) => {
+                    setClientName(e.target.value);
+                    setCount(count + 1);
+                  }}
+                  value={clientName}
+                />
+              </Col>
+
+              <Col>
+                <Button danger type="dashed" onClick={fetchDataForErrorDay}>
+                  LOGGER SIN ENVIÓ
+                </Button>
+              </Col>
+              <Col>
+                <Button danger type="dashed" onClick={fetchDataForNivelError}>
+                  NIVELES FUERA DE RANGO
+                </Button>
+              </Col>
+              <Col>
+                <Button danger type="dashed" onClick={fetchDataForFlowError}>
+                  CAUDALES FUERA DE RANGO
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  onClick={() => {
+                    setCount(count + 1);
+                    setClientName("");
+                  }}
+                  type="primary"
+                >
+                  Limpiar filtros
+                </Button>
+              </Col>
+            </Row>
+          )}
           bordered
           size={"small"}
           pagination={{
             pageSize: 10,
+            showSizeChanger: false,
             total: total,
+            simple: true,
+            position: ["bottomCenter", "topRight"],
             onChange: (page) => setPage(page),
           }}
           dataSource={data}
